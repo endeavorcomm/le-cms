@@ -10,6 +10,7 @@
 
 we're assuming ufw is enabled and started
 if you're not going to use a firewall, you can skip this step
+
     sudo ufw allow from cert.server.ip.address any port 22 proto tcp
 
 ## add the directory where you'll store certificates (example uses 'le' for Lets Encrypt)
@@ -35,8 +36,11 @@ if you're not going to use a firewall, you can skip this step
 ## create the options-ssl.conf file, if it doesn't already exist
 
 adjust SSLProtocols, SSLCipherSuites, and other options as desired
+
     cd ..
     sudo nano options-ssl.conf
+
+copy this into the file
 
     SSLEngine on
     
@@ -82,9 +86,11 @@ you should get the below output. Answer the question with 'yes', and enter the c
     Now try logging into the machine, with:   "ssh 'certbot@remote-ip-address'"
     and check to make sure that only the key(s) you wanted were added.
 
+then try connecting to the remote server
+
     ssh 'certbot@remote-ip'
 
-enter certbot's password and you should be logged in (you may not need to enter password)
+enter the certbot user's password and you should be logged in (you may not need to enter password)
 now type exit to close the session
 then connect again, and you shouldn't be prompted for the password this time
 
@@ -97,6 +103,7 @@ then connect again, and you shouldn't be prompted for the password this time
     Load key "/home/certbot/.ssh/id_rsa": Permission denied
 
 then try this:
+
     sudo -i
     cd /home/certbot
     chown -R certbot:certbot .ssh
@@ -108,9 +115,11 @@ then try this:
 ### open ssh session to server as a user who has sudo privileges
 
 install nginx
+
     sudo apt install nginx
 
 enable request limit of 1 request per second - or whatever you prefer
+
     cd /etc/nginx
     sudo nano nginx.conf
 
