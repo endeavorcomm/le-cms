@@ -25,7 +25,7 @@ Adjust as neccessary for your choice of linux distributions and software.
 ## Network Diagram
 
 This is a basic view of the certificate management
-![TLS Flow](./TLS-Flow.gif)
+![TLS Flow](./TLS-Flow.pdf)
 
 ### Brief Explanation of Certificate Flow
 
