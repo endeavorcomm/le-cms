@@ -52,3 +52,8 @@ Once you have the prerequsites taken care of, follow the steps found in setup-ce
 ## Start deploying certificates
 
 Steps can be found in deploy-certificates.md
+
+## Extras
+
+The verify-http.sh script can be used to make sure that http is redirecting to https, https is responding, and the domain name matches the certificate.
+This process is automatically done during site deployment. But if the verifications fail during that time, you can correct the errors and run this script to only test the verifications.
