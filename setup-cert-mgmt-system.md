@@ -52,6 +52,10 @@ Copy this into the apache.conf file
 
 Save the file and close it
 
+Restart Apache
+
+    sudo systemctl reload apache2
+
 ## Setup the TLS managment server
 
 Login as a user with sudo privileges, then create the certbot user. You may want to set the password the same as the certbot user you created on your web server(s)
@@ -155,14 +159,14 @@ Restart nginx
 
 Login to your webserver(s) as a user with sudo privileges
 
-Download scripts, or clone the repo from [GitHub](https://github.com/endeavorcomm/le-cms)
+Download scripts, or clone the repo from [GitHub](https://github.com/endeavorcomm/le-cms), and copy to the user's home directory
 
     sudo apt install git
     git clone https://github.com/endeavorcomm/le-cms.git
 
-Change the !#/bin/bash line at the top of all scripts to whatever the path is to your bash. To find out, type 'which bash' in the CLI.
+Change the !#/bin/bash line at the top of all scripts to whatever the path is to your bash. To find out, type 'which bash' in the CLI
 
-If you didn't clone the repo, copy deploy-site.sh to the home directory of a user with sudo privileges, on your webserver(s). Otherwise:
+If you cloned the repo, copy deploy-site.sh to your user's home directory
 
     cp le-cms/deploy-site.sh ../
 
@@ -172,12 +176,12 @@ Make sure the script is executable
 
 Login to your certificate management server as the certbot user
 
-Download scripts, or clone the repo from [GitHub](https://github.com/endeavorcomm/le-cms)
+Download scripts, or clone the repo from [GitHub](https://github.com/endeavorcomm/le-cms), and copy to the user's home directory
 
     sudo apt install git
     git clone https://github.com/endeavorcomm/le-cms.git
 
-Change the !#/bin/bash line at the top of all scripts to whatever the path is to your bash. To find out, type 'which bash' in the CLI.
+Change the !#/bin/bash line at the top of all scripts to whatever the path is to your bash. To find out, type 'which bash' in the CLI
 
 If you cloned the repo, copy deploy-cert.sh and renew-cert.sh scripts into the home directory of the certbot user, on your certificate managment server
 
