@@ -41,6 +41,7 @@ This is a basic view of the certificate management
 ## Script file placement
 
 deploy-site.sh should be copied to the webserver(s)
+
 deploy-cert.sh and renew-cert.sh should be copied to the certificate management server
 
 ## Setup the Certificate Management System
