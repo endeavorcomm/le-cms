@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 printf "\nReady to check HTTP and HTTPS sites.\n\n"
 read -p "Please enter the domain name, then press enter: " DOMAIN
