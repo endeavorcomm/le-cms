@@ -158,15 +158,20 @@ save and close file
 
 download scripts from the [GitHub](https://github.com/endeavorcomm/le-cms) repo
 
-copy contents of deploy-site.sh to the home directory of a user with sudo privileges, on your webserver(s)
+change the !#/bin/bash line at the top of both scripts to whatever the path is to your bash
+to find out, type 'which bash' at the command prompt.
+
+copy deploy-site.sh to the home directory of a user with sudo privileges, on your webserver(s)
 login as that user and make sure the script is executable
 
     chmod 774 deploy-site.sh
 
-copy contents of deploy-cert.sh and renew-cert.sh scripts to the home directory of the certbot user, on your certificate managment server
+copy deploy-cert.sh and renew-cert.sh scripts to the home directory of the certbot user, on your certificate managment server
 login as the certbot user and make sure the scripts are executable
 
     chmod 774 deploy-cert.sh
     chmod 774 renew-cert.sh
+
+If you're having trouble running the scripts, try copying the contents from the repo file, then pasting into the file on the server
 
 The system should now be ready to deploy certificates! Find next steps in deploy-certificates.md in the repo

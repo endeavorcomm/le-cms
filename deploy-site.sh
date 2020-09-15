@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 CONFIGPATH="/etc/apache2/sites-available/"
 CERTPATH="/etc/ssl/le/"
