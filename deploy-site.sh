@@ -52,6 +52,9 @@ then
     printf "\nCreating HTTP site...\n"
     sudo printf "<VirtualHost *:80>\n\tServerName $DOMAIN\n\tRedirect 301 /.well-known/acme-challenge http://$SERVER/.well-known/acme-challenge\n\tDocumentRoot /var/www/html\n\tRewriteEngine on\n\tRewriteCond %%{REQUEST_URI} !^/.well-known/acme-challenge\n\tRewriteRule ^ https://%%{SERVER_NAME}%%{REQUEST_URI} [END,NE,R=permanent]\n</VirtualHost>\n" > $CONFIGPATH$DOMAIN$DEFAULT
 
+    printf "Reloading the Apache service...\n"
+    sudo systemctl reload apache2
+
     ## Verify http site was created
     if [ -f $CONFIGPATH$DOMAIN$DEFAULT ]
     then

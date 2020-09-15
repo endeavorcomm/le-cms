@@ -20,7 +20,11 @@ Run the deploy-cert.sh script
 
     sudo ./deploy-cert.sh -d portal.example.com -h 10.1.1.1 -h 10.1.1.2
 
-You'll be prompted to enter certbot's password once; then once more for each host you've listed in the command
+You'll be prompted to enter certbot's password once
+
+(The next two steps will be repeated based on the number of hosts you provided in the deploy-site command)
+Then accept the server's fingerprint by responding 'yes'
+Then you'll be prompted to enter certbot's password again
 
 Go back to the webserver SSH session(s)
 Press the 'y' key to continue the scripts
