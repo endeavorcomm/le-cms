@@ -16,7 +16,7 @@ CONFIRM=$(printf $CONFIRM | tr "{y}" "{Y}")
 if [[ $CONFIRM == Y ]]
 then
 # check if http permanently redirects to https
-curl -sSLI --stderr httpstatus http://$DOMAIN > httpstatus
+curl -sSLI --stderr httpstatus http://$DOMAIN > le-cms_httpstatus
 
 awk 'BEGIN {
         RS="\n"
@@ -29,7 +29,7 @@ awk 'BEGIN {
     } else {
       printf("%s %s\n", "\nHTTP redirecting to HTTPS - FAILED: status", $2 ", expecting 301")
     }
-} ' httpstatus
+} ' le-cms_httpstatus
 
 # check for typical errors
 awk 'BEGIN {
@@ -41,13 +41,13 @@ awk 'BEGIN {
   } else if ((NR == 1) && ($2 == "(60)")) {
     printf("%s\n", "\nHTTP redirecting to HTTPS - OK")
   }
-} ' httpstatus
+} ' le-cms_httpstatus
 
-rm -f httpstatus
+rm -f le-cms_httpstatus
 
 
 # check if https is responding
-curl -sSI --stderr httpstatus https://$DOMAIN > httpstatus
+curl -sSI --stderr httpstatus https://$DOMAIN > le-cms_httpstatus
 
 awk 'BEGIN {
         RS="\n"
@@ -60,7 +60,7 @@ awk 'BEGIN {
   } else {
     printf("%s %s\n", "HTTPS Responding - FAILED", $2)
   }
-} ' httpstatus
+} ' le-cms_httpstatus
 
 # check for typical errors
 awk 'BEGIN {
@@ -74,7 +74,7 @@ awk 'BEGIN {
   } else if ((NR == 1) && ($2 == "(60)")) {
     printf("%s\n", "HTTPS responding, but certificate is invalid for your domain name - FAILED")
   }
-} ' httpstatus
+} ' le-cms_httpstatus
 
 rm -f httpstatus
 else
