@@ -19,6 +19,10 @@ Add the directory where you'll store certificates
     sudo chown root:certbot le
     sudo chmod 775 le
 
+### If you're using Apache for HTTP challenges
+
+(adjust as neccessary for nginx)
+
 Make sure relevant apache modules are enabled
 
     cd /etc/apache2/mods-enabled
@@ -131,7 +135,7 @@ Somewhere in the http { } section, insert:
 
 Save and close the file
 
-### acme-challenge site for Lets Encrypt http challenges
+### acme-challenge site for Lets Encrypt HTTP challenges
 
     cd sites-available
     sudo nano acme-challenge.example.com
@@ -155,7 +159,42 @@ Restart nginx
 
     sudo systemctl restart nginx
 
-### Deploy scripts
+### To enable Lets Encrypt DNS challenges
+
+Install [acme-dns](https://github.com/joohoi/acme-dns) and follow the instructions
+(make sure the gcc package is installed on your server before trying to build acme-dns)
+
+Be sure to add DNS records to your main DNS server before starting acme-dns service!!
+Example:
+if your acme-challenge server's FQDN is acme-challenge.example.com,
+add an A record for it in your example.com DNS zone (this may already exist, from previous le-cms steps)
+add an NS record for acme-challenge.example.com that points to acme-challenge.example.com
+
+#### A few notes about the acme-dns configuration
+
+IN THE [general] section:
+
+- change 'listen' to the network IP address of your acme-challenge server
+- change 'domain' and 'nsname' to the FQDN of your acme-challenge server
+- change 'nsadmin' to a proper email address
+
+IN THE [api] section:
+
+- change 'ip' to the network IP address of your acme-challenge server
+- change 'tls' to "letsencrypt" (this allows acme-dns to properly bind to port 443)
+
+Install [acme-dns-client](https://github.com/joohoi/acme-dns-certbot-joohoi) and follow the instructions
+
+The acme-dns-auth.py script uses python. If you have python3 installed, add a symbolic link
+
+    sudo ln -s /usr/bin/python3 /usr/bin/python
+
+#### A few notes about the acme-dns-auth.py script configuration
+
+- change the 'ACMEDNS_URL' to the FQDN of your acme-challenge server
+- add your acme-challenge server's network IP to the 'ALLOW_FROM' array (ex "192.168.1.1/32")
+
+### Deploy le-cms scripts
 
 Login to your webserver(s) as a user with sudo privileges
 
@@ -168,11 +207,11 @@ Change the !#/bin/bash line at the top of all scripts to whatever the path is to
 
 If you cloned the repo, copy deploy-site.sh to your user's home directory
 
-    cp le-cms/deploy-site.sh ../
+    cp le-cms/deploy-site.sh ~
 
 Make sure the script is executable
 
-    chmod 774 deploy-site.sh
+    chmod 700 deploy-site.sh
 
 Login to your certificate management server as the certbot user
 
@@ -185,13 +224,13 @@ Change the !#/bin/bash line at the top of all scripts to whatever the path is to
 
 If you cloned the repo, copy deploy-cert.sh and renew-cert.sh scripts into the home directory of the certbot user, on your certificate managment server
 
-    cp le-cms/deploy-cert.sh ../
-    cp le-cms/renew-cert.sh ../
+    cp le-cms/deploy-cert.sh ~
+    cp le-cms/renew-cert.sh ~
 
 Make sure the scripts are executable
 
-    chmod 774 deploy-cert.sh
-    chmod 774 renew-cert.sh
+    chmod 700 deploy-cert.sh
+    chmod 700 renew-cert.sh
 
 If you're having trouble running the scripts, try copying the contents from the repo file, then pasting into the file on the server
 
