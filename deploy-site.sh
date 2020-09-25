@@ -95,7 +95,7 @@ then
 
     ## Create HTTPS site
     printf "\nCreating HTTPS site...\n"
-    sudo printf "<IfModule mod_ssl.c>\n<VirtualHost *:443>\n\tServerName $DOMAIN\n\tDocumentRoot /var/www/html\n\tSSLCertificateFile /etc/ssl/le/$DOMAIN/fullchain1.pem\n\tSSLCertificateKeyFile /etc/ssl/le/$DOMAIN/privkey1.pem\n\tInclude /etc/apache2/options-ssl.conf\n</VirtualHost>\n</IfModule>\n" > $APACHEPATH$DOMAIN$SECURE
+    sudo printf "<IfModule mod_ssl.c>\n<VirtualHost *:443>\n\tServerName $DOMAIN\n\tDocumentRoot /var/www/html\n\tSSLCertificateFile /etc/ssl/le/$DOMAIN/fullchain1.pem\n\tSSLCertificateKeyFile /etc/ssl/le/$DOMAIN/privkey1.pem\n\tInclude /etc/apache2/options-ssl.conf\n</VirtualHost>\n</IfModule>\n" > $CONFIGPATH$DOMAIN$SECURE
 
     ## Verify https site was created
     if [ -f $CONFIGPATH$DOMAIN$SECURE ]
