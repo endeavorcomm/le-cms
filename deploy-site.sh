@@ -15,11 +15,12 @@ read -n1 -rsp "Is this correct? $DOMAIN [Y|N] " CONFIRMDOM
 ## Format response in all uppercase
 CONFIRMDOM=$(printf $CONFIRMDOM | tr "{y}" "{Y}")
 
+DEFAULT=".conf"
+SECURE="-le-ssl.conf"
+
 if [[ $CONFIRMDOM == Y ]]
 then
   printf "\nChecking for existing $DOMAIN sites...\n"
-  DEFAULT=".conf"
-  SECURE="-le-ssl.conf"
   if [[ -f $CONFIGPATH$DOMAIN$DEFAULT && -f $CONFIGPATH$DOMAIN$SECURE ]]
   then
     printf "$CONFIGPATH$DOMAIN$DEFAULT and $CONFIGPATH$DOMAIN$SECURE already exist. \nExiting...\n"
@@ -56,7 +57,7 @@ then
     if [ -f $CONFIGPATH$DOMAIN$DEFAULT ]
     then
       printf "Enabling HTTP site...\n"
-      sudo a2ensite -q $CONFIGPATH$DOMAIN$DEFAULT
+      sudo a2ensite -q $DOMAIN$DEFAULT
 
       printf "Reloading the Apache service...\n"
       sudo systemctl reload apache2
@@ -78,13 +79,13 @@ then
           ## Begin creating https site further below
         else
           printf "One or more certificate files not found. Removing HTTP site and exiting...\n"
-          sudo a2dissite -q $CONFIGPATH$DOMAIN$DEFAULT
+          sudo a2dissite -q $DOMAIN$DEFAULT
           sudo rm -f $CONFIGPATH$DOMAIN$DEFAULT
           exit 1
         fi
       else
         printf "\n\nYou did not press Y. Removing HTTP site and exiting...\n"
-        sudo a2dissite -q $CONFIGPATH$DOMAIN$DEFAULT
+        sudo a2dissite -q $DOMAIN$DEFAULT
         sudo rm -f $CONFIGPATH$DOMAIN$DEFAULT
         exit 1
       fi
@@ -102,16 +103,16 @@ then
     then
       ## Enable sites
       printf "Enabling HTTPS site...\n"
-      sudo a2ensite -q $CONFIGPATH$DOMAIN$SECURE
+      sudo a2ensite -q $DOMAIN$SECURE
 
-      ## Restart Apace
+      ## Restart Apache
       printf "Reloading the Apache service...\n"
       sudo systemctl reload apache2
       printf "HTTPS site ready.\n"
     else
       printf "We were not able to create the HTTPS site. Removing HTTP site and exiting...\n"
-      sudo a2dissite -q $CONFIGPATHDOMAIN$DEFAULT
-      sudo rm -f $CONFIGPATHPATH$DOMAIN$DEFAULT
+      sudo a2dissite -q $DOMAIN$DEFAULT
+      sudo rm -f $CONFIGPATH$DOMAIN$DEFAULT
       exit 1
     fi
 
