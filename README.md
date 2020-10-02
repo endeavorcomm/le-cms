@@ -2,26 +2,20 @@
 
 Deploy and renew TLS certificates from a central server.
 
-Supports HTTP challenges natively. Supports DNS challenges using [acme-dns](https://github.com/joohoi/acme-dns) and joohoi's [acme-dns-certbot](https://github.com/joohoi/acme-dns-certbot-joohoi).
+Supports Apache HTTP challenges natively. Supports DNS challenges using joohoi's [acme-dns](https://github.com/joohoi/acme-dns) and [acme-dns-certbot](https://github.com/joohoi/acme-dns-certbot-joohoi).
 
 ## Prerequsites
 
-- a Linux server for managing certificates, with [Certbot](https://certbot.eff.org/instructions) installed
-- at least one Linux server for hosting websites
-- a DNS entry for the certificate management server domain name
-- at least one DNS entry for the web server which will use the Lets Encrypt certificate
+- a systemd-based Linux server, for managing certificates, with [Certbot](https://certbot.eff.org/instructions) and nginx installed
+- relevant DNS records for the FQDNs you'll use
 - ssh access to all servers
+- if using HTTP challenges, ensure Apache is installed on the servers hosting the certificates (nginx is not supported yet)
 
 ### Our documentation is based on the following environment
 
 - a modern version of Ubuntu on all servers
-- apache2 installed on the webserver(s)
-- nginx installed on the certificate management server
-- a user on each server who has sudo or root privileges
 - acme-challenge.example.com as the domain for the certificate management server
-- portal.example.com as the domain name for our website using the certificate
-
-Adjust as neccessary for your choice of linux distributions and software.
+- portal.example.com as the domain name for our webserver using the certificate
 
 ## Network Diagrams
 
@@ -36,10 +30,10 @@ This is a basic view of the certificate management using HTTP challenges
 4. The webserver which receives the request will respond with a 301 redirect
     - Lets Encrypt honors the 301 redirect and sends the http request to the certificate management server
     - The certificate management server responds to the http challenge, Lets Encrypt validates the response and issues the certificate to the management server
-    - The certbot client stores the files locally
+    - The certbot client stores the files locally on the certificate management server
 5. The deploy-cert script finishes by copying the locally-stored certificate files to the webservers
 
-This is a basic view of the certificate management using HTTP challenges
+This is a basic view of the certificate management using DNS challenges
 ![TLS DNS Flow](./tls-flow-dns.gif)
 
 ### Brief Explanation of DNS Flow
@@ -50,12 +44,12 @@ This is a basic view of the certificate management using HTTP challenges
     - the acme-dns server creates a txt record for the domain
     - you're prompted to create a CNAME record on your main DNS server for _acme-challenge.portal.example.com that points to acme-challenge.example.com
     - Lets Encrypt initiates a DNS challenge, the acme-dns server responds, Lets Encrypt validates the response and issues the certificate to the managment server
-    - The certbot client stores the files locally
+    - The certbot client stores the files locally on the certificate management server
 4. The deploy-cert script finishes by copying the locally-stored certificate files to the webservers
 
 ## Script file placement
 
-deploy-site.sh should be copied to the webserver(s)
+if you're using HTTP challenges, deploy-site.sh should be copied to the webserver(s)
 
 deploy-cert.sh and renew-cert.sh should be copied to the certificate management server
 

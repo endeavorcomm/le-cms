@@ -15,7 +15,9 @@ Run the deploy-site.sh script on each server, then follow prompts
 When prompted by the deploy-site.sh script, SSH to your certificate management server as user certbot
 
 Run the deploy-cert.sh script
+
 -d is the domain name of the certificate
+
 -h is the ip address of the webserver host(s) to copy certificate files to. Use multiple -h statements for multiple servers
 
     sudo ./deploy-cert.sh -d portal.example.com -h 10.1.1.1 -h 10.1.1.2
@@ -23,8 +25,8 @@ Run the deploy-cert.sh script
 You'll be prompted to enter certbot's password once
 
 (The next two steps will be repeated based on the number of hosts you provided in the deploy-site command)
-Then accept the server's fingerprint by responding 'yes'
-Then you'll be prompted to enter certbot's password again
+Accept the server's fingerprint by responding 'yes'
+You'll be prompted to enter certbot's password again
 
 Go back to the webserver SSH session(s)
 Press the 'y' key to continue the scripts
@@ -34,6 +36,7 @@ When the script is finished, double-check redirection and validate certificate w
 ## Setup cronjob to renew certificate
 
 Go back to the certificate management server SSH session
+
 Edit certbot's crontab
 
     crontab -e
