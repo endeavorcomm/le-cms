@@ -38,8 +38,58 @@ then
   sudo certbot certonly --webroot -w /usr/share/nginx/html -d $DOMAIN
 elif [[ $CHALLENGE == dns ]]
 then
-  printf "Requesting Lets Encrypt certificate for $DOMAIN with DNS challenge...\n"
-  sudo certbot certonly --manual --manual-auth-hook /etc/letsencrypt/acme-dns-auth.py --preferred-challenges dns --debug-challenges -d $DOMAIN
+  printf "Validate DNS acme-server\n"
+  read -p "Please enter the FQDN for the acme-dns server, including http(s), then press enter: " SERVER
+
+  ## Format SERVER in all lowercase
+  SERVER=$(printf $SERVER | tr "{A-Z}" "{a-z}")
+
+  printf "\n"
+  read -n1 -rsp "Is this correct? $SERVER [Y|N] " CONFIRMSVR
+
+  ## Format response in all uppercase
+  CONFIRMSVR=$(printf $CONFIRMSVR | tr "{y}" "{Y}")
+
+  if [[ $CONFIRMSVR == Y ]]
+  then
+    printf "Checking health of acme-dns server...\n"
+    curl -sSI -X GET $SERVER/health > le-cms_acmestatus
+
+    awk 'BEGIN {
+        RS="\n"
+    }
+    /^HTTP/{
+      if ((NR == 1) && ($2 == 200)) {
+        printf("%s %s\n", "acme-dns - OK: status", $2)
+      } else if (NR != 1) {
+        # ignore other HTTP sections
+      } else {
+        printf("%s %s\n", "acme-dns - FAILED: status", $2 ", expecting 200")
+        printf ("%s\n", "Exiting...")
+        exit 1
+      }
+    } ' le-cms_acmestatus
+
+    # check for typical errors
+    awk 'BEGIN {
+        RS="\n"
+    }
+    /^curl/{
+      if ((NR == 1) && ($2 == "(6)")) {
+        printf("%s\n", "acme-dns - FAILED: Could not resolve host")
+        printf("%s\n", "Exiting...")
+        exit 1
+      }
+    } ' le-cms_acmestatus
+
+    rm -f le-cms_acmestatus
+
+    printf "Requesting Lets Encrypt certificate for $DOMAIN with DNS challenge...\n"
+    sudo certbot certonly --manual --manual-auth-hook /etc/letsencrypt/acme-dns-auth.py --preferred-challenges dns --debug-challenges -d $DOMAIN
+  else
+    printf "Exiting..."
+    exit 0
+  fi
 else
   printf "Invalid challenge option - $CHALLENGE"
   exit 1
@@ -51,3 +101,4 @@ for host in "${HOSTS[@]}"; do
 done
 
 printf "\nFinished.\n"
+exit 0
