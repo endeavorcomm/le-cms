@@ -118,7 +118,7 @@ then
 
     printf "\nVerifiying HTTP and HTTPS connectivity...\n"
     # check if http permanently redirects to https
-    curl -sSLI --stderr httpstatus http://$DOMAIN > le-cms_httpstatus
+    curl -sSLI --stderr le-cms_httpstatus http://$DOMAIN > le-cms_httpstatus
     
     awk 'BEGIN {
         RS="\n"
@@ -149,7 +149,7 @@ then
 
 
     # check if https is responding
-    curl -sSI --stderr httpstatus https://$DOMAIN > le-cms_httpstatus
+    curl -sSI --stderr le-cms_httpstatus https://$DOMAIN > le-cms_httpstatus
 
     awk 'BEGIN {
         RS="\n"
