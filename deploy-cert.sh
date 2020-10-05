@@ -52,8 +52,8 @@ then
 
   if [[ $CONFIRMSVR == Y ]]
   then
-    printf "Checking health of acme-dns server...\n"
-    curl -sSI -X GET $SERVER/health > le-cms_acmestatus
+    printf "\nChecking health of acme-dns server...\n"
+    curl -sSI --stderr -X GET $SERVER/health > le-cms_acmestatus
 
     awk 'BEGIN {
         RS="\n"
