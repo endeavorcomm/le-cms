@@ -1,10 +1,40 @@
-#!/bin/bash
+#!/usr/bin/bash
 
-CONFIGPATH="/etc/apache2/sites-available/"
 CERTPATH="/etc/ssl/le/"
 
-printf "\nReady to deploy sites.\n\n"
-read -p "Please enter the domain name for your site certificate, then press enter: " DOMAIN
+read -p "Which web server are you using [apache2|nginx]? " WEBSERVER
+
+## Format WEBSERVER in all lowercase
+WEBSERVER=$(printf $WEBSERVER | tr "{A-Z}" "{a-z}")
+
+printf "\n"
+read -n1 -rsp "Is this correct? $WEBSERVER [Y|N] " CONFIRMWEBSERVER
+
+## Format response in all uppercase
+CONFIRMWEBSERVER=$(printf $CONFIRMWEBSERVER | tr "{y}" "{Y}")
+
+if [[ $CONFIRMWEBSERVER == Y ]]
+then
+  printf "\n"
+  if [[ $WEBSERVER == apache2 ]]
+  then
+    DEFAULT=".conf"
+    SECURE="-le-ssl.conf"
+  elif [[ $WEBSERVER == nginx ]]
+  then
+    DEFAULT=""
+    SECURE="-le-ssl"
+  else
+    printf "Invalid webserver option - $WEBSERVER"
+    exit 1
+  fi
+  CONFIGPATH="/etc/$WEBSERVER/sites-available/"
+else
+  printf "\nCancelling...\n"
+  exit 1
+fi
+
+read -p "Please enter the domain name for your site: " DOMAIN
 
 ## Format DOMAIN in all lowercase
 DOMAIN=$(printf $DOMAIN | tr "{A-Z}" "{a-z}")
@@ -14,9 +44,6 @@ read -n1 -rsp "Is this correct? $DOMAIN [Y|N] " CONFIRMDOM
 
 ## Format response in all uppercase
 CONFIRMDOM=$(printf $CONFIRMDOM | tr "{y}" "{Y}")
-
-DEFAULT=".conf"
-SECURE="-le-ssl.conf"
 
 if [[ $CONFIRMDOM == Y ]]
 then
@@ -37,7 +64,7 @@ then
     printf "Checks Passed.\n"
   fi
 
-  read -p "Please enter the domain name for your certificate management server, then press enter: " SERVER
+  read -p "Please enter the domain name for your certificate management server: " SERVER
 
   ## Format SERVER in all lowercase
   SERVER=$(printf $SERVER | tr "{A-Z}" "{a-z}")
@@ -51,16 +78,28 @@ then
   if [[ $CONFIRMSVR == Y ]]
   then
     printf "\nCreating HTTP site...\n"
-    sudo printf "<VirtualHost *:80>\n\tServerName $DOMAIN\n\tRedirect 301 /.well-known/acme-challenge http://$SERVER/.well-known/acme-challenge\n\tDocumentRoot /var/www/html\n\tRewriteEngine on\n\tRewriteCond %%{REQUEST_URI} !^/.well-known/acme-challenge\n\tRewriteRule ^ https://%%{SERVER_NAME}%%{REQUEST_URI} [END,NE,R=permanent]\n</VirtualHost>\n" > $CONFIGPATH$DOMAIN$DEFAULT
+    if [[ $WEBSERVER == apache2 ]]
+    then
+      sudo printf "<VirtualHost *:80>\n\tServerName $DOMAIN\n\tRedirect 301 /.well-known/acme-challenge http://$SERVER/.well-known/acme-challenge\n\tDocumentRoot /var/www/html\n\tRewriteEngine on\n\tRewriteCond %%{REQUEST_URI} !^/.well-known/acme-challenge\n\tRewriteRule ^ https://%%{SERVER_NAME}%%{REQUEST_URI} [END,NE,R=permanent]\n</VirtualHost>\n" > $CONFIGPATH$DOMAIN$DEFAULT
+    elif [[ $WEBSERVER == nginx ]]
+    then
+      sudo printf "server {\n\tlisten 80;\n\tlisten [::]:80;\n\tserver_name $DOMAIN;\n\troot /usr/share/nginx/html;\n\trewrite ^/.well-known/acme-challenge http://$SERVER/.well-known/acme-challenge permanent;\n\trewrite ^/$ 'https://%%{HTTP_HOST}%%{REQUEST_URI}' permanent;\n}\n" > $CONFIGPATH$DOMAIN$DEFAULT
+    fi
 
     ## Verify http site was created
     if [ -f $CONFIGPATH$DOMAIN$DEFAULT ]
     then
       printf "Enabling HTTP site...\n"
-      sudo a2ensite -q $DOMAIN$DEFAULT
+      if [[ $WEBSERVER == apache2 ]]
+      then
+        sudo a2ensite -q $DOMAIN$DEFAULT
+      elif [[ $WEBSERVER == nginx ]]
+      then
+        sudo ln -s /etc/nginx/sites-available/$DOMAIN$DEFAULT /etc/nginx/sites-enabled/$DOMAIN$DEFAULT
+      fi
 
-      printf "Reloading the Apache service...\n"
-      sudo systemctl reload apache2
+      printf "Reloading the webserver service...\n"
+      sudo systemctl reload $WEBSERVER
 
       printf "HTTP site ready.\n"
       printf "\nSTOP! If you are using multiple servers to host $DOMAIN, connect to them now and run this same script.\n"
@@ -73,19 +112,31 @@ then
       if [ $KEY == Y  ]
       then
         printf "\n\nVerifying certificate files...\n"
-        if [[ -f $CERTPATH$DOMAIN/cert1.pem && -f $CERTPATH$DOMAIN/fullchain1.pem && -f $CERTPATH$DOMAIN/chain1.pem ]]
+        if [[ -f $CERTPATH$DOMAIN/cert.pem && -f $CERTPATH$DOMAIN/fullchain.pem && -f $CERTPATH$DOMAIN/chain.pem ]]
         then
           printf "Certificate files found.\n"
           ## Begin creating https site further below
         else
           printf "One or more certificate files not found. Removing HTTP site and exiting...\n"
-          sudo a2dissite -q $DOMAIN$DEFAULT
+          if [[ $WEBSERVER == apache2 ]]
+          then
+            sudo a2dissite -q $DOMAIN$DEFAULT
+          elif [[ $WEBSERVER == nginx ]]
+          then
+            sudo rm -f /etc/nginx/sites-enabled/$DOMAIN$DEFAULT
+          fi
           sudo rm -f $CONFIGPATH$DOMAIN$DEFAULT
           exit 1
         fi
       else
         printf "\n\nYou did not press Y. Removing HTTP site and exiting...\n"
-        sudo a2dissite -q $DOMAIN$DEFAULT
+        if [[ $WEBSERVER == apache2 ]]
+        then
+          sudo a2dissite -q $DOMAIN$DEFAULT
+        elif [[ $WEBSERVER == nginx ]]
+        then
+          sudo rm -f /etc/nginx/sites-enabled/$DOMAIN$DEFAULT
+        fi
         sudo rm -f $CONFIGPATH$DOMAIN$DEFAULT
         exit 1
       fi
@@ -96,30 +147,48 @@ then
 
     ## Create HTTPS site
     printf "\nCreating HTTPS site...\n"
-    sudo printf "<IfModule mod_ssl.c>\n<VirtualHost *:443>\n\tServerName $DOMAIN\n\tDocumentRoot /var/www/html\n\tSSLCertificateFile /etc/ssl/le/$DOMAIN/fullchain1.pem\n\tSSLCertificateKeyFile /etc/ssl/le/$DOMAIN/privkey1.pem\n\tInclude /etc/apache2/options-ssl.conf\n</VirtualHost>\n</IfModule>\n" > $CONFIGPATH$DOMAIN$SECURE
+    if [[ $WEBSERVER == apache2 ]]
+    then
+      sudo printf "<IfModule mod_ssl.c>\n<VirtualHost *:443>\n\tServerName $DOMAIN\n\tDocumentRoot /var/www/html\n\tSSLCertificateFile /etc/ssl/le/$DOMAIN/fullchain.pem\n\tSSLCertificateKeyFile /etc/ssl/le/$DOMAIN/privkey.pem\n\tInclude /etc/apache2/options-ssl.conf\n</VirtualHost>\n</IfModule>\n" > $CONFIGPATH$DOMAIN$SECURE
+    elif [[ $WEBSERVER == nginx ]]
+    then
+      sudo printf "server {\n\tlisten 443 ssl;\n\tlisten [::]:443 ssl;\n\tserver_name $DOMAIN;\n\troot /usr/share/nginx/html;\n\tssl_certificate /etc/ssl/le/$DOMAIN/fullchain.pem\n\tssl_certificate_key /etc/ssl/le/$DOMAIN/privkey.pem;\n\tssl_session_timeout 1d;\n\tssl_session_cache shared:MozSSL:10m;\n\tssl_session_tickets off;\n\tssl_protocols TLSv1.2 TLSv1.3;\n\tssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;\n\tssl_prefer_server_ciphers off;\n\tssl_stapling on;\n}\n" > $CONFIGPATH$DOMAIN$SECURE
+    fi
 
     ## Verify https site was created
     if [ -f $CONFIGPATH$DOMAIN$SECURE ]
     then
       ## Enable sites
       printf "Enabling HTTPS site...\n"
-      sudo a2ensite -q $DOMAIN$SECURE
+      if [[ $WEBSERVER == apache2 ]]
+      then
+        sudo a2ensite -q $DOMAIN$SECURE
+      elif [[ $WEBSERVER == nginx ]]
+      then
+        sudo ln -s /etc/nginx/sites-available/$DOMAIN$SECURE /etc/nginx/sites-enabled/$DOMAIN$SECURE
+      fi
 
-      ## Restart Apache
-      printf "Reloading the Apache service...\n"
-      sudo systemctl reload apache2
+      ## Restart webserver
+      printf "Reloading the $WEBSERVER service...\n"
+      sudo systemctl reload $WEBSERVER
       printf "HTTPS site ready.\n"
     else
       printf "We were not able to create the HTTPS site. Removing HTTP site and exiting...\n"
-      sudo a2dissite -q $DOMAIN$DEFAULT
-      sudo rm -f $CONFIGPATH$DOMAIN$DEFAULT
+      if [[ $WEBSERVER == apache2 ]]
+      then
+        sudo a2dissite -q $DOMAIN$SECURE
+      elif [[ $WEBSERVER == nginx ]]
+      then
+        sudo rm -f /etc/nginx/sites-enabled/$DOMAIN$SECURE
+      fi
+      sudo rm -f $CONFIGPATH$DOMAIN$SECURE
       exit 1
     fi
 
     printf "\nVerifiying HTTP and HTTPS connectivity...\n"
     # check if http permanently redirects to https
     curl -sSLI --stderr le-cms_httpstatus http://$DOMAIN > le-cms_httpstatus
-    
+
     awk 'BEGIN {
         RS="\n"
     }

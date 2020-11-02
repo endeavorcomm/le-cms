@@ -122,19 +122,6 @@ Install nginx
 
     sudo apt install nginx
 
-Enable request limit of 1 request per second - or whatever you prefer
-
-    cd /etc/nginx
-    sudo nano nginx.conf
-
-Somewhere in the http { } section, insert:
-
-    ##
-    # Rate Limit
-    ##
-    
-    limit_req_zone $binary_remote_addr zone=default:1m rate=1r/s;
-
 Save and close the file
 
 ### acme-challenge site for Lets Encrypt HTTP challenges
@@ -149,7 +136,6 @@ Copy the below content into the file
       server_name acme-challenge.example.com;
       root /usr/share/nginx/html;
       location ^~ /.well-known/ {
-        limit_req zone=default;
         try_files $uri $uri/ =404;
       }
       location / {

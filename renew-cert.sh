@@ -31,8 +31,8 @@ IFS=$ORIGIFS
 
 printf "\nDeploying certificates for $DOMAIN...\n"
 for host in "${HOSTS[@]}"; do
-  rsync -e 'ssh -i /home/certbot/.ssh/id_rsa' -L $RENEWED_LINEAGE/cert.pem certbot@$host:/etc/ssl/le/$DOMAIN/cert1.pem
-  rsync -e 'ssh -i /home/certbot/.ssh/id_rsa' -L $RENEWED_LINEAGE/chain.pem certbot@$host:/etc/ssl/le/$DOMAIN/chain1.pem
-  rsync -e 'ssh -i /home/certbot/.ssh/id_rsa' -L $RENEWED_LINEAGE/fullchain.pem certbot@$host:/etc/ssl/le/$DOMAIN/fullchain1.pem
-  rsync -e 'ssh -i /home/certbot/.ssh/id_rsa' -L $RENEWED_LINEAGE/privkey.pem certbot@$host:/etc/ssl/le/$DOMAIN/privkey1.pem
+  rsync -e 'ssh -i /home/certbot/.ssh/id_rsa' -L $RENEWED_LINEAGE/cert.pem certbot@$host:/etc/ssl/le/$DOMAIN/cert.pem
+  rsync -e 'ssh -i /home/certbot/.ssh/id_rsa' -L $RENEWED_LINEAGE/chain.pem certbot@$host:/etc/ssl/le/$DOMAIN/chain.pem
+  rsync -e 'ssh -i /home/certbot/.ssh/id_rsa' -L $RENEWED_LINEAGE/fullchain.pem certbot@$host:/etc/ssl/le/$DOMAIN/fullchain.pem
+  rsync -e 'ssh -i /home/certbot/.ssh/id_rsa' -L $RENEWED_LINEAGE/privkey.pem certbot@$host:/etc/ssl/le/$DOMAIN/privkey.pem
 done

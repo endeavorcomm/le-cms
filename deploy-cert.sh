@@ -14,14 +14,14 @@ done
 # check for domain argument
 if [[ $DOMAIN == '' ]]
 then
-  printf "Please include a domain name with -d"
+  printf "Please include a domain name with -d\n"
   exit 1
 fi
 
 # check for host argument
 if [[ $HOSTS == '' ]]
 then
-  printf "Please include at least one host IP address with -h"
+  printf "Please include at least one host IP address with -h\n"
   exit 1
 fi
 
@@ -41,7 +41,7 @@ then
   printf "Requesting Lets Encrypt certificate for $DOMAIN with DNS challenge...\n"
   sudo certbot certonly --manual --manual-auth-hook /etc/letsencrypt/acme-dns-auth.py --preferred-challenges dns --debug-challenges -d $DOMAIN
 else
-  printf "Invalid challenge option - $CHALLENGE"
+  printf "Invalid challenge option - $CHALLENGE\n"
   exit 1
 fi
 
