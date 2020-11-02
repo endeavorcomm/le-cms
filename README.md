@@ -2,7 +2,7 @@
 
 Deploy and renew TLS certificates from a central server.
 
-Supports Apache HTTP challenges natively. Supports DNS challenges using joohoi's [acme-dns](https://github.com/joohoi/acme-dns) and [acme-dns-certbot](https://github.com/joohoi/acme-dns-certbot-joohoi).
+Supports Apache and NGINX HTTP challenges. Supports DNS challenges using joohoi's [acme-dns](https://github.com/joohoi/acme-dns) and [acme-dns-certbot](https://github.com/joohoi/acme-dns-certbot-joohoi).
 
 ## Prerequsites
 
