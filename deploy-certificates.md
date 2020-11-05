@@ -24,7 +24,7 @@ Run the deploy-cert.sh script
 
 You'll be prompted to enter certbot's password once
 
-(The next two steps will be repeated based on the number of hosts you provided in the deploy-site command)
+(When first deploying to these hosts, the next two steps will be repeated based on the number of hosts you provided in the deploy-site command)
 Accept the server's fingerprint by responding 'yes'
 You'll be prompted to enter certbot's password again
 

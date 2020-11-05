@@ -19,7 +19,7 @@ Add the directory where you'll store certificates
     sudo chown root:certbot le
     sudo chmod 775 le
 
-### If you're using Apache for HTTP challenges
+### If you're using Apache2 for HTTP challenges
 
 Make sure relevant apache modules are enabled
 
@@ -67,6 +67,42 @@ Restart Apache
 Login as a user with sudo privileges, then create the certbot user. You may want to set the password the same as the certbot user you created on your web server(s)
 
     sudo adduser certbot
+
+Install nginx
+
+    sudo apt install nginx
+
+Save and close the file
+
+### acme-challenge site for Lets Encrypt HTTP challenges
+
+    cd sites-available
+    sudo nano acme-challenge.example.com
+
+Copy the below content into the file
+
+    server {
+      listen 80;
+      server_name acme-challenge.example.com;
+      root /usr/share/nginx/html;
+      location ^~ /.well-known/ {
+        try_files $uri $uri/ =404;
+      }
+      location / {
+        return 404;
+      }
+    }
+
+Save and close the file
+
+Enable the site
+
+    cd ../site-enabled
+    sudo ln -s ../sites-available/acme-challenge.example.com acme-challenge.example.com
+
+Restart nginx
+
+    sudo systemctl restart nginx
 
 Logout of current session, and log back in as the certbot user
 
@@ -118,41 +154,7 @@ you can try this to resolve the issue:
     exit
     ssh 'certbot@remote-ip-address'
 
-Install nginx
-
-    sudo apt install nginx
-
-Save and close the file
-
-### acme-challenge site for Lets Encrypt HTTP challenges
-
-    cd sites-available
-    sudo nano acme-challenge.example.com
-
-Copy the below content into the file
-
-    server {
-      listen 80;
-      server_name acme-challenge.example.com;
-      root /usr/share/nginx/html;
-      location ^~ /.well-known/ {
-        try_files $uri $uri/ =404;
-      }
-      location / {
-        return 404;
-      }
-    }
-
-Save and close the file
-
-Enable the site
-
-    cd ../site-enabled
-    sudo ln -s ../sites-available/acme-challenge.example.com acme-challenge.example.com
-
-Restart nginx
-
-    sudo systemctl restart nginx
+logout of 'certbot' user session
 
 ### To enable Lets Encrypt DNS challenges
 

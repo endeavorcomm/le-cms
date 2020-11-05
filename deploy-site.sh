@@ -83,7 +83,7 @@ then
       sudo printf "<VirtualHost *:80>\n\tServerName $DOMAIN\n\tRedirect 301 /.well-known/acme-challenge http://$SERVER/.well-known/acme-challenge\n\tDocumentRoot /var/www/html\n\tRewriteEngine on\n\tRewriteCond %%{REQUEST_URI} !^/.well-known/acme-challenge\n\tRewriteRule ^ https://%%{SERVER_NAME}%%{REQUEST_URI} [END,NE,R=permanent]\n</VirtualHost>\n" > $CONFIGPATH$DOMAIN$DEFAULT
     elif [[ $WEBSERVER == nginx ]]
     then
-      sudo printf "server {\n\tlisten 80;\n\tlisten [::]:80;\n\tserver_name $DOMAIN;\n\troot /usr/share/nginx/html;\n\trewrite ^/.well-known/acme-challenge http://$SERVER/.well-known/acme-challenge permanent;\n\trewrite ^/$ 'https://%%{HTTP_HOST}%%{REQUEST_URI}' permanent;\n}\n" > $CONFIGPATH$DOMAIN$DEFAULT
+      sudo printf "server {\n\tlisten 80;\n\tlisten [::]:80;\n\tserver_name $DOMAIN;\n\troot /usr/share/nginx/html;\n\trewrite ^/.well-known/acme-challenge http://$SERVER/.well-known/acme-challenge permanent;\n\treturn 301 https://%%{HTTP_HOST}\$request_uri;\n}\n" > $CONFIGPATH$DOMAIN$DEFAULT
     fi
 
     ## Verify http site was created
@@ -152,7 +152,7 @@ then
       sudo printf "<IfModule mod_ssl.c>\n<VirtualHost *:443>\n\tServerName $DOMAIN\n\tDocumentRoot /var/www/html\n\tSSLCertificateFile /etc/ssl/le/$DOMAIN/fullchain.pem\n\tSSLCertificateKeyFile /etc/ssl/le/$DOMAIN/privkey.pem\n\tInclude /etc/apache2/options-ssl.conf\n</VirtualHost>\n</IfModule>\n" > $CONFIGPATH$DOMAIN$SECURE
     elif [[ $WEBSERVER == nginx ]]
     then
-      sudo printf "server {\n\tlisten 443 ssl;\n\tlisten [::]:443 ssl;\n\tserver_name $DOMAIN;\n\troot /usr/share/nginx/html;\n\tssl_certificate /etc/ssl/le/$DOMAIN/fullchain.pem\n\tssl_certificate_key /etc/ssl/le/$DOMAIN/privkey.pem;\n\tssl_session_timeout 1d;\n\tssl_session_cache shared:MozSSL:10m;\n\tssl_session_tickets off;\n\tssl_protocols TLSv1.2 TLSv1.3;\n\tssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;\n\tssl_prefer_server_ciphers off;\n\tssl_stapling on;\n}\n" > $CONFIGPATH$DOMAIN$SECURE
+      sudo printf "server {\n\tlisten 443 ssl;\n\tlisten [::]:443 ssl;\n\tserver_name $DOMAIN;\n\troot /usr/share/nginx/html;\n\tssl_certificate /etc/ssl/le/$DOMAIN/fullchain.pem;\n\tssl_certificate_key /etc/ssl/le/$DOMAIN/privkey.pem;\n\tssl_session_timeout 1d;\n\tssl_session_cache shared:MozSSL:10m;\n\tssl_session_tickets off;\n\tssl_protocols TLSv1.2 TLSv1.3;\n\tssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;\n\tssl_prefer_server_ciphers off;\n\tssl_stapling on;\n}\n" > $CONFIGPATH$DOMAIN$SECURE
     fi
 
     ## Verify https site was created
