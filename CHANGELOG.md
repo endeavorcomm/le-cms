@@ -7,12 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Clarifies verbiage in README.md
-
 ### Added
 
 - Document support for nginx
 - Fix changelog markdown links
+- Clarifies verbiage in README.md
 
 ## [2.0.0] - 2020-11-02
 
