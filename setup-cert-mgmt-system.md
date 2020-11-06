@@ -162,10 +162,11 @@ Install [acme-dns](https://github.com/joohoi/acme-dns) and follow the instructio
 (make sure the gcc package is installed on your server before trying to build acme-dns)
 
 Be sure to add DNS records to your main DNS server before starting acme-dns service!!
-Example:
-if your acme-challenge server's FQDN is acme-challenge.example.com,
-add an A record for it in your example.com DNS zone
-add an NS record for acme-challenge.example.com that points to acme-challenge.example.com
+
+For example, if your acme-challenge server's FQDN is acme-challenge.example.com:
+
+- add an A record for it in your example.com DNS zone
+- add an NS record for acme-challenge.example.com that points to acme-challenge.example.com
 
 #### A few notes about the acme-dns configuration
 
