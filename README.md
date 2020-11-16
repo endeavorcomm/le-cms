@@ -55,11 +55,11 @@ deploy-cert.sh and renew-cert.sh should be copied to the CMS
 
 ## Setup the Certificate Management System
 
-Once you have the prerequsites taken care of, follow the steps found in ![setup-cert-mgmt-system.md](setup-cert-mgmt-system.md)
+Once you have the prerequsites taken care of, follow the steps found in [setup-cert-mgmt-system.md](setup-cert-mgmt-system.md)
 
 ## Start deploying certificates
 
-Steps can be found in ![deploy-certificates.md](deploy-certificates.md)
+Steps can be found in [deploy-certificates.md](deploy-certificates.md)
 
 ## Extras
 
