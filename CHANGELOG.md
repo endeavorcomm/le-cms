@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- copy-cert.sh script. If a certificate gets renewed, but the files aren't properly copied to the remote servers, use this script to copy them. Instructions are in the 'Extras' section of the ![README](./README.md).
+
 ## [2.1.1] - 2020-11-05
 
 ### Added
