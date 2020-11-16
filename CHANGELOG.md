@@ -43,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Everything!
 
-[Unreleased]: https://github.com/endeavorcomm/le-cms/compare/2.0.0...HEAD
+[Unreleased]: https://github.com/endeavorcomm/le-cms/compare/2.1.1...HEAD
 [2.1.1]: https://github.com/endeavorcomm/le-cms/compare/2.0.0...2.1.1
 [2.0.0]: https://github.com/endeavorcomm/le-cms/compare/1.0.0...2.0.0
 [1.0.0]: https://github.com/endeavorcomm/le-cms/releases/tag/1.0.0
