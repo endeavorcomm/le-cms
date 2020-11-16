@@ -76,7 +76,7 @@ Save and close the file
 
 ### acme-challenge site for Lets Encrypt HTTP challenges
 
-    cd sites-available
+    cd /etc/nginx/sites-available
     sudo nano acme-challenge.example.com
 
 Copy the below content into the file
