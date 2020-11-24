@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.2] - 2020-11-24
+
 ### Added
 
 - copy-cert.sh script. If a certificate gets renewed, but the files aren't properly copied to the remote servers, use this script to copy them. Instructions are in the 'Extras' section of the [README](./README.md).
+
+### Changed
+
+- Fixes copying of renewed certificate files
 
 ## [2.1.1] - 2020-11-05
 
@@ -43,7 +49,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Everything!
 
-[Unreleased]: https://github.com/endeavorcomm/le-cms/compare/2.1.1...HEAD
+[Unreleased]: https://github.com/endeavorcomm/le-cms/compare/2.1.2...HEAD
+[2.1.2]: https://github.com/endeavorcomm/le-cms/compare/2.1.1...2.1.2
 [2.1.1]: https://github.com/endeavorcomm/le-cms/compare/2.0.0...2.1.1
 [2.0.0]: https://github.com/endeavorcomm/le-cms/compare/1.0.0...2.0.0
 [1.0.0]: https://github.com/endeavorcomm/le-cms/releases/tag/1.0.0

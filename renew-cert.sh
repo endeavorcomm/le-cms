@@ -17,19 +17,9 @@ then
   exit 1
 fi
 
-ORIGIFS=$IFS
-IFS='/'
+# assign domain name for renewed cert
+DOMAIN=$(basename $RENEWED_LINEAGE)
 
-# get domain name for renewed cert
-read -a PATHARR <<< $RENEWED_LINEAGE
-LENGTH=${#PATHARR[@]}
-LAST=$((LENGTH - 1))
-DOMAIN=${PATHARR[${LAST}]}
-
-# reset IFS variable
-IFS=$ORIGIFS
-
-printf "\nDeploying certificates for $DOMAIN...\n"
 for host in "${HOSTS[@]}"; do
   rsync -e 'ssh -i /home/certbot/.ssh/id_rsa' -L $RENEWED_LINEAGE/cert.pem certbot@$host:/etc/ssl/le/$DOMAIN/cert.pem
   rsync -e 'ssh -i /home/certbot/.ssh/id_rsa' -L $RENEWED_LINEAGE/chain.pem certbot@$host:/etc/ssl/le/$DOMAIN/chain.pem
