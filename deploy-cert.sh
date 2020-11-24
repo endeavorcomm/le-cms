@@ -25,7 +25,7 @@ then
   exit 1
 fi
 
-BASE_DIR=/etc/letsencrypt/archive/$DOMAIN
+BASE_DIR=/etc/letsencrypt/live/$DOMAIN
 
 read -p "Use HTTP or DNS for the domain challenge [http|dns]? " CHALLENGE
 

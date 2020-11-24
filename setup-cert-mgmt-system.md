@@ -1,6 +1,6 @@
 # Setup Centralized Certificate Management
 
-## Setup servers that will host websites
+## Setup servers that will use the certificates
 
 Login as a user with sudo privileges, then create the certbot user. You'll need to remember the password for steps further below
 
