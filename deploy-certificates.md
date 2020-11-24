@@ -1,6 +1,6 @@
 # Deploying TLS Certificates
 
-Disclaimer: Restarting the webserver is involved in this process
+Disclaimer: If using the HTTP method, restarting the webserver is involved in this process
 
 Ensure that all DNS entries for your url are resolvable before deploying a new site and certificate
 

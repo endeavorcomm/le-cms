@@ -10,7 +10,7 @@ Add a firewall rule which allows ssh connections from your certificate managment
 
 We're assuming ufw is enabled and started. If you're not going to use a firewall, you can skip this step
 
-    sudo ufw allow from cert.server.ip.address any port 22 proto tcp
+    sudo ufw allow from cert.server.ip.address to any port 22 proto tcp
 
 Add the directory where you'll store certificates
 
@@ -194,7 +194,7 @@ The acme-dns-auth.py script uses python. If you have python3 installed, add a sy
 
 ### Deploy le-cms scripts
 
-If using HTTP challenges, login to your webserver(s) as a user with sudo privileges
+#### If using HTTP challenges, login to your webserver(s) as a user with sudo privileges
 
 Download scripts, or clone the repo from [GitHub](https://github.com/endeavorcomm/le-cms), and copy to the user's home directory
 
@@ -211,7 +211,7 @@ Make sure the script is executable
 
     chmod 700 deploy-site.sh
 
-Login to your certificate management server as the certbot user
+#### Login to your certificate management server as the certbot user
 
 Download scripts, or clone the repo from [GitHub](https://github.com/endeavorcomm/le-cms), and copy to the user's home directory
 

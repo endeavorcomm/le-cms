@@ -39,7 +39,7 @@ then
 elif [[ $CHALLENGE == dns ]]
 then
   printf "Validate DNS acme-server\n"
-  read -p "Please enter the FQDN for the acme-dns server, including http(s), then press enter: " SERVER
+  read -p "Please enter the FQDN for the acme-dns server, then press enter: " SERVER
 
   ## Format SERVER in all lowercase
   SERVER=$(printf $SERVER | tr "{A-Z}" "{a-z}")
