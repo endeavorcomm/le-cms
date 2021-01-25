@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.3] - 2021-01-25
+
 ### Changed
 
 - Fixes initial certificate file names when copying from CMS to servers, for consistency with version 2.0.0 breaking changes
+- Removes 'sudo' from the beginning of the deploy hook command in the deploy-certificates.md documentation. This was causing $RENEWED_LINEAGE to be unavailable in the shell, and copying of renewed certs to remote hosts was failing
+- Makes verify-http.sh commands more efficient
 
 ## [2.1.2] - 2020-11-24
 
@@ -53,7 +57,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Everything!
 
-[Unreleased]: https://github.com/endeavorcomm/le-cms/compare/2.1.2...HEAD
+[Unreleased]: https://github.com/endeavorcomm/le-cms/compare/2.1.3...HEAD
+[2.1.3]: https://github.com/endeavorcomm/le-cms/compare/2.1.2...2.1.3
 [2.1.2]: https://github.com/endeavorcomm/le-cms/compare/2.1.1...2.1.2
 [2.1.1]: https://github.com/endeavorcomm/le-cms/compare/2.0.0...2.1.1
 [2.0.0]: https://github.com/endeavorcomm/le-cms/compare/1.0.0...2.0.0

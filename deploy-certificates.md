@@ -60,4 +60,4 @@ Edit certbot's crontab
 Copy and paste the below line to the bottom of the existing cron list. Then change the domain and host IP(s) (adjust time as desired, default is everyday at 5:00am)
 Save and close the file
 
-    0 5 * * * sudo certbot -q renew --cert-name portal.example.com --deploy-hook 'sudo /home/certbot/renew-cert.sh -h 10.1.1.1 -h 10.2.2.2'
+    0 5 * * * sudo certbot -q renew --cert-name portal.example.com --deploy-hook '/home/certbot/renew-cert.sh -h 10.1.1.1 -h 10.2.2.2'

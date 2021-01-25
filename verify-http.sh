@@ -1,22 +1,24 @@
 #!/bin/bash
 
-printf "\nReady to check HTTP and HTTPS sites.\n\n"
-read -p "Please enter the domain name, then press enter: " DOMAIN
+printf "\n"
+printf "Ready to check HTTP and HTTPS sites."
+printf "\n\n"
+
+echo -n "Please enter the domain name, then press enter: "
+read -r DOMAIN
 
 ## Format DOMAIN in all lowercase
-DOMAIN=$(printf $DOMAIN | tr "{A-Z}" "{a-z}")
+DOMAIN=${DOMAIN,,}
 
 ## Confirm domain name
 printf "\n"
-read -n1 -rsp "Is this the correct domain? $DOMAIN [Y|N] " CONFIRM
+echo -n "Is this the correct domain? $DOMAIN [Y|N] "
+read -r -n1 CONFIRM
 
-## Format response in all uppercase
-CONFIRM=$(printf $CONFIRM | tr "{y}" "{Y}")
-
-if [[ $CONFIRM == Y ]]
+if [[ ${CONFIRM^^} == "Y" ]]
 then
-# check if http permanently redirects to https
-curl -sSLI --stderr httpstatus http://$DOMAIN > le-cms_httpstatus
+    # check if http permanently redirects to https
+    curl -sSLI --stderr httpstatus "http://$DOMAIN" > le-cms_httpstatus
 
 awk 'BEGIN {
         RS="\n"
