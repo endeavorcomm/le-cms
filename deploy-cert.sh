@@ -97,7 +97,7 @@ fi
 
 printf "\nDeploying certificate...\n"
 for host in "${HOSTS[@]}"; do
-  rsync -pLgo $BASE_DIR certbot@$host:/etc/ssl/le/
+  rsync -rpLgo $BASE_DIR certbot@$host:/etc/ssl/le/
 done
 
 printf "\nFinished.\n"
