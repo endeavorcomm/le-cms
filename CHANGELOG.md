@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Fixes changelog versioning links
+- Fixes copying files for a new certificate
 
 ## [2.1.3] - 2021-01-25
 
