@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changes all scripts to start with #!/usr/bin/env bash, for more flexability for any environment
 - Fixes changelog versioning links
 - Fixes copying files for a new certificate
 

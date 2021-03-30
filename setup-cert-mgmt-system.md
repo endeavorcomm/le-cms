@@ -201,8 +201,6 @@ Download scripts, or clone the repo from [GitHub](https://github.com/endeavorcom
     sudo apt install git
     git clone https://github.com/endeavorcomm/le-cms.git
 
-Change the !#/bin/bash line at the top of all scripts to whatever the path is to your bash. To find out, type 'which bash' in the CLI
-
 If you cloned the repo, copy deploy-site.sh to your user's home directory
 
     cp le-cms/deploy-site.sh ~
@@ -217,8 +215,6 @@ Download scripts, or clone the repo from [GitHub](https://github.com/endeavorcom
 
     sudo apt install git
     git clone https://github.com/endeavorcomm/le-cms.git
-
-Change the !#/bin/bash line at the top of all scripts to whatever the path is to your bash. To find out, type 'which bash' in the CLI
 
 If you cloned the repo, copy deploy-cert.sh and renew-cert.sh scripts into the home directory of the certbot user, on your certificate managment server
 

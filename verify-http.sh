@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 printf "\n"
 printf "Ready to check HTTP and HTTPS sites."
