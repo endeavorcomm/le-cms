@@ -83,7 +83,7 @@ then
       sudo printf "<VirtualHost *:80>\n\tServerName $DOMAIN\n\tRedirect 301 /.well-known/acme-challenge http://$SERVER/.well-known/acme-challenge\n\tDocumentRoot /var/www/html\n\tRewriteEngine on\n\tRewriteCond %%{REQUEST_URI} !^/.well-known/acme-challenge\n\tRewriteRule ^ https://%%{SERVER_NAME}%%{REQUEST_URI} [END,NE,R=permanent]\n</VirtualHost>\n" > $CONFIGPATH$DOMAIN$DEFAULT
     elif [[ $WEBSERVER == nginx ]]
     then
-      sudo printf "server {\n\tlisten 80;\n\tlisten [::]:80;\n\tserver_name $DOMAIN;\n\troot /usr/share/nginx/html;\n\trewrite ^/.well-known/acme-challenge http://$SERVER/.well-known/acme-challenge permanent;\n\treturn 301 https://%%{HTTP_HOST}\$request_uri;\n}\n" > $CONFIGPATH$DOMAIN$DEFAULT
+      sudo printf "server {\n\tlisten 80;\n\tlisten [::]:80;\n\tserver_name $DOMAIN;\n\troot /usr/share/nginx/html;\n\trewrite ^/.well-known/acme-challenge http://$SERVER\$request_uri permanent;\n\treturn 301 https://\$host\$request_uri;\n}\n" > $CONFIGPATH$DOMAIN$DEFAULT
     fi
 
     ## Verify http site was created
