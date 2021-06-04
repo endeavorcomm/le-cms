@@ -14,11 +14,9 @@ Run the deploy-site.sh script on each server, then follow prompts
 
 When prompted by the deploy-site.sh script, SSH to your certificate management server as user certbot
 
-## If using the DNS challenge method
+## If using the DNS challenge method, or after the above step, continue
 
 SSH to your certificate management server as user certbot
-
-## Then continue
 
 Run the deploy-cert.sh script
 
