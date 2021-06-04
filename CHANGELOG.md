@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changes all scripts to start with #!/usr/bin/env bash, for more flexability for any environment
 - Fixes changelog versioning links
 - Fixes copying files for a new certificate
+- Fixes bash line on deploy-cert.sh
+- Fixes acme redirect and 301 return lines when deploying an nginx site
 
 ## [2.1.3] - 2021-01-25
 
