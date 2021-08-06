@@ -7,21 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Nothing to see here!
+
+## [3.0.0] - 2021-08-06
+
 ### Changed
 
-- Changes all scripts to start with #!/usr/bin/env bash, for more flexability for any environment
-- Fixes changelog versioning links
-- Fixes copying files for a new certificate
-- Fixes bash line on deploy-cert.sh
-- Fixes acme redirect and 301 return lines when deploying an nginx site
+- All scripts to start with #!/usr/bin/env bash, for more flexability for any environment
+- Script's -h argument to comma separated format, instead of multiple -h args. (ex, -h 10.1.1.1,10.1.1.2)
+
+### Fixed
+
+- Changelog versioning links
+- Copying files for a new certificate
+- Bash line on deploy-cert.sh
+- Acme redirect and 301 return lines when deploying an nginx site
 
 ## [2.1.3] - 2021-01-25
 
 ### Changed
 
-- Fixes initial certificate file names when copying from CMS to servers, for consistency with version 2.0.0 breaking changes
-- Removes 'sudo' from the beginning of the deploy hook command in the deploy-certificates.md documentation. This was causing $RENEWED_LINEAGE to be unavailable in the shell, and copying of renewed certs to remote hosts was failing
 - Makes verify-http.sh commands more efficient
+
+### Fixed
+
+- Initial certificate file names when copying from CMS to servers, for consistency with version 2.0.0 breaking changes
+
+### Removed
+
+- Removes 'sudo' from the beginning of the deploy hook command in the deploy-certificates.md documentation. This was causing $RENEWED_LINEAGE to be unavailable in the shell, and copying of renewed certs to remote hosts was failing
 
 ## [2.1.2] - 2020-11-24
 
@@ -29,9 +43,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - copy-cert.sh script. If a certificate gets renewed, but the files aren't properly copied to the remote servers, use this script to copy them. Instructions are in the 'Extras' section of the [README](./README.md).
 
-### Changed
+### Fixed
 
-- Fixes copying of renewed certificate files
+- Copying of renewed certificate files
 
 ## [2.1.1] - 2020-11-05
 
@@ -42,16 +56,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Document support for nginx
-- Fixes changelog markdown links
 - Clarifies verbiage in README.md
-- Fixes nginx https site creation
-- Fixes nginx http site redirect from http to https
+
+### Fixed
+
+- Changelog markdown links
+- nginx https site creation
+- nginx http site redirect from http to https
 
 ## [2.0.0] - 2020-11-02
 
 ### Added
 
-- Support NGINX web servers.
+- Support for NGINX web servers.
 
 ### Removed
 
@@ -65,7 +82,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Everything!
 
-[Unreleased]: https://github.com/endeavorcomm/le-cms/compare/v2.1.3...HEAD
+[Unreleased]: https://github.com/endeavorcomm/le-cms/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/endeavorcomm/le-cms/compare/v3.0.0...v2.1.3
 [2.1.3]: https://github.com/endeavorcomm/le-cms/compare/v2.1.2...v2.1.3
 [2.1.2]: https://github.com/endeavorcomm/le-cms/compare/2.1.1...v2.1.2
 [2.1.1]: https://github.com/endeavorcomm/le-cms/compare/2.0.0...2.1.1
