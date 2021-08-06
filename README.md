@@ -66,4 +66,4 @@ Steps can be found in [deploy-certificates.md](deploy-certificates.md)
 The verify-http.sh script can be used to make sure that http is redirecting to https, https is responding, and the domain name matches the certificate.
 This process is automatically done during site deployment. But if the verifications fail during this time, you can correct the errors and run verify-http.sh to only test the verifications.
 
-The copy-cert.sh script can be used on the CMS if a certificate gets renewed, but the files aren't properly copied to the remote servers. Parameters are -d for the cert's domain name, and -h for the IPs of the remote hosts (use multiple -h parameters for more than one host). It should be in the certbot user's home directory.
+The copy-cert.sh script can be used on the CMS if a certificate gets renewed, but the files aren't properly copied to the remote servers. Parameters are -d for the cert's domain name, and -h for the IPs of the remote hosts (use comma separated list for more than one host). It should be in the certbot user's home directory.
