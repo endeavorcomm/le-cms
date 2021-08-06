@@ -211,6 +211,16 @@ Make sure the script is executable
 
 #### Login to your certificate management server as the certbot user
 
+## Setup cronjob to renew certificates
+
+Edit certbot's crontab
+
+    crontab -e
+
+Copy and paste the below line to the bottom of the existing cron list - adjust time as desired, default is everyday at 5:00am. Save and close the file
+
+    0 5 * * * sudo certbot -q renew
+
 Download scripts, or clone the repo from [GitHub](https://github.com/endeavorcomm/le-cms), and copy to the user's home directory
 
     sudo apt install git

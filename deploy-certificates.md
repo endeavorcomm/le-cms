@@ -22,9 +22,9 @@ Run the deploy-cert.sh script
 
 -d is the domain name of the certificate
 
--h is the ip address of the webserver host(s) to copy certificate files to. Use multiple -h statements for multiple servers
+-h is a comma separated list of ip addresses of the webserver host(s) to copy certificate files to.
 
-    sudo ./deploy-cert.sh -d portal.example.com -h 10.1.1.1 -h 10.1.1.2
+    sudo ./deploy-cert.sh -d portal.example.com -h 10.1.1.1,10.1.1.2
 
 Follow the prompts
 
@@ -46,16 +46,3 @@ Follow the prompts to create a CNAME record for the acme challenge
 ## Then continue
 
 When the script is finished, double-check redirection and validate certificate with a web browser
-
-## Setup cronjob to renew certificate
-
-Go back to the certificate management server SSH session
-
-Edit certbot's crontab
-
-    crontab -e
-
-Copy and paste the below line to the bottom of the existing cron list. Then change the domain and host IP(s) (adjust time as desired, default is everyday at 5:00am)
-Save and close the file
-
-    0 5 * * * sudo certbot -q renew --cert-name portal.example.com --deploy-hook '/home/certbot/renew-cert.sh -h 10.1.1.1 -h 10.2.2.2'
