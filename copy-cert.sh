@@ -4,7 +4,7 @@ while getopts ":d:h:" opt; do
   case $opt in
     d) DOMAIN="$OPTARG"
     ;;
-    h) HOSTS+=("$OPTARG")
+    h) HOSTS="$OPTARG"
     ;;
     \?) printf "Invalid option -$OPTARG" && exit 1
     ;;
@@ -25,8 +25,10 @@ then
   exit 1
 fi
 
+IFS="," read -ra hosts <<< $HOSTS
+
 printf "\nDeploying certificates for $DOMAIN...\n"
-for host in "${HOSTS[@]}"; do
+for host in "${hosts[@]}"; do
   rsync -e 'ssh -i /home/certbot/.ssh/id_rsa' -L /etc/letsencrypt/live/$DOMAIN/cert.pem certbot@$host:/etc/ssl/le/$DOMAIN/cert.pem
   rsync -e 'ssh -i /home/certbot/.ssh/id_rsa' -L /etc/letsencrypt/live/$DOMAIN/chain.pem certbot@$host:/etc/ssl/le/$DOMAIN/chain.pem
   rsync -e 'ssh -i /home/certbot/.ssh/id_rsa' -L /etc/letsencrypt/live/$DOMAIN/fullchain.pem certbot@$host:/etc/ssl/le/$DOMAIN/fullchain.pem
