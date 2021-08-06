@@ -4,7 +4,7 @@ while getopts ":d:h:" opt; do
   case $opt in
     d) DOMAIN="$OPTARG"
     ;;
-    h) HOSTS+=("$OPTARG")
+    h) HOSTS="$OPTARG"
     ;;
     \?) printf "Invalid option -$OPTARG" && exit 1
     ;;
@@ -24,6 +24,8 @@ then
   printf "Please include at least one host IP address with -h\n"
   exit 1
 fi
+
+IFS="," read -ra hosts <<< $HOSTS
 
 BASE_DIR=/etc/letsencrypt/live/$DOMAIN
 
@@ -96,9 +98,12 @@ else
 fi
 
 printf "\nDeploying certificate...\n"
-for host in "${HOSTS[@]}"; do
+for host in "${hosts[@]}"; do
   rsync -rpLgo $BASE_DIR certbot@$host:/etc/ssl/le/
 done
+
+printf "\nAdding renew hook to certificate configuration...\n"
+echo "renew_hook = sudo /home/certbot/renew-cert.sh -h $HOSTS" >> /etc/letsencrypt/renewal/$DOMAIN.conf
 
 printf "\nFinished.\n"
 exit 0
