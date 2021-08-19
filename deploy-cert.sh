@@ -103,7 +103,7 @@ for host in "${hosts[@]}"; do
 done
 
 printf "\nAdding renew hook to certificate configuration...\n"
-echo "renew_hook = /home/certbot/renew-cert.sh -h $HOSTS" >> /etc/letsencrypt/renewal/$DOMAIN.conf
+sed -i "/\[renewalparams\]/a renew_hook = /home/certbot/renew-cert.sh -h $HOSTS" /etc/letsencrypt/renewal/$DOMAIN.conf
 
 printf "\nFinished.\n"
 exit 0
