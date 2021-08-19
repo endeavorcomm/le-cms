@@ -9,11 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing to see here!
 
+## [3.0.1] - 2021-08-19
+
+### Changed
+
+- Renew hook command is now inserted appropriately into the domain's renewal config file, instead of appended.
+
+### Fixed
+
+- Removes 'sudo' from renew hook command. Was causing an error and failing to copy certificates.
+
 ## [3.0.0] - 2021-08-06
 
 ### Changed
 
-- All scripts to start with #!/usr/bin/env bash, for more flexability for any environment
+- All scripts to start with #!/usr/bin/env bash, for more flexibility for any environment
 - Script's -h argument to comma separated format, instead of multiple -h args. (ex, -h 10.1.1.1,10.1.1.2)
 
 ### Fixed
@@ -83,6 +93,7 @@ Nothing to see here!
 Everything!
 
 [Unreleased]: https://github.com/endeavorcomm/le-cms/compare/v3.0.0...HEAD
+[3.0.1]: https://github.com/endeavorcomm/le-cms/compare/v3.0.1...v3.0.0
 [3.0.0]: https://github.com/endeavorcomm/le-cms/compare/v3.0.0...v2.1.3
 [2.1.3]: https://github.com/endeavorcomm/le-cms/compare/v2.1.2...v2.1.3
 [2.1.2]: https://github.com/endeavorcomm/le-cms/compare/2.1.1...v2.1.2
