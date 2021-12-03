@@ -229,16 +229,16 @@ then
 
 
     # check if https is responding
-    curl -sSI --stderr le-cms_httpstatus https://$DOMAIN > le-cms_httpstatus
+    curl -sSLI --stderr le-cms_httpstatus https://$DOMAIN > le-cms_httpstatus
 
     awk 'BEGIN {
         RS="\n"
     }
     /^HTTP/{
-      if ((NR == 1) && ($2 == 200)) {
+      if ((NR == 1 || NR == 7) && ($2 == 200)) {
         printf("%s %s\n", "HTTPS Responding - OK: status", $2)
-      } else if (NR != 1) {
-        # ignore other HTTP sections
+      } else if ((NR == 1) && ($2 == 301)) {
+        # ignore 301 redirect
       } else {
         printf("%s %s\n", "HTTPS Responding - FAILED", $2)
       }
