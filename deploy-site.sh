@@ -98,8 +98,14 @@ then
         sudo ln -s /etc/nginx/sites-available/$DOMAIN$DEFAULT /etc/nginx/sites-enabled/$DOMAIN$DEFAULT
       fi
 
-      printf "Reloading the webserver service...\n"
-      sudo systemctl reload $WEBSERVER
+      printf "Reloading the $WEBSERVER service...\n"
+      if [[ $WEBSERVER == apache2 ]]
+      then
+        sudo apachectl -k graceful
+      elif [[ $WEBSERVER == nginx ]]
+      then
+        sudo nginx -s reload
+      fi
 
       printf "HTTP site ready.\n"
       printf "\nSTOP! If you are using multiple servers to host $DOMAIN, connect to them now and run this same script.\n"
@@ -168,9 +174,14 @@ then
         sudo ln -s /etc/nginx/sites-available/$DOMAIN$SECURE /etc/nginx/sites-enabled/$DOMAIN$SECURE
       fi
 
-      ## Restart webserver
       printf "Reloading the $WEBSERVER service...\n"
-      sudo systemctl reload $WEBSERVER
+      if [[ $WEBSERVER == apache2 ]]
+      then
+        sudo apachectl -k graceful
+      elif [[ $WEBSERVER == nginx ]]
+      then
+        sudo nginx -s reload
+      fi
       printf "HTTPS site ready.\n"
     else
       printf "We were not able to create the HTTPS site. Removing HTTP site and exiting...\n"
