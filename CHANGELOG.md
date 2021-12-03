@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- webserver graceful restart, from systemctl-based to native commands for nginx and apache2 (apachectl)
+
 ### Fixed
 
 - FAILED status, when verifying https sites for a proper response and there is a 301 before a 200
