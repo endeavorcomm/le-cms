@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - webserver graceful restart, from systemctl-based to native commands for nginx and apache2 (apachectl)
+- host cli option - from comma separated to comma with a trailing space separated (ex: -h 10.0.0.1, 10.0.0.2)
 
 ### Fixed
 
