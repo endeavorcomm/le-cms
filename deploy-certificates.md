@@ -22,9 +22,9 @@ Run the deploy-cert.sh script
 
 -d is the domain name of the certificate
 
--h is a comma separated list of ip addresses of the webserver host(s) to copy certificate files to.
+-h is a comma-space separated list of ip addresses of the webserver host(s) to copy certificate files to.
 
-    sudo ./deploy-cert.sh -d portal.example.com -h 10.1.1.1,10.1.1.2
+    sudo ./deploy-cert.sh -d portal.example.com -h 10.1.1.1, 10.1.1.2
 
 Follow the prompts
 
