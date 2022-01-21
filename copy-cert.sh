@@ -25,7 +25,7 @@ then
   exit 1
 fi
 
-IFS="," read -ra hosts <<< $HOSTS
+IFS=", " read -ra hosts <<< $HOSTS
 
 printf "\nDeploying certificates for $DOMAIN...\n"
 for host in "${hosts[@]}"; do

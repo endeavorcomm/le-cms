@@ -17,7 +17,7 @@ then
   exit 1
 fi
 
-IFS="," read -ra hosts <<< $HOSTS
+IFS=", " read -ra hosts <<< $HOSTS
 
 # assign domain name for renewed cert
 DOMAIN=$(basename $RENEWED_LINEAGE)

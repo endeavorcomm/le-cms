@@ -25,7 +25,7 @@ then
   exit 1
 fi
 
-IFS="," read -ra hosts <<< $HOSTS
+IFS=", " read -ra hosts <<< $HOSTS
 
 BASE_DIR=/etc/letsencrypt/live/$DOMAIN
 
