@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
+HOSTS=''
 
-while getopts "h:" opt; do
+while getopts "h:s" opt; do
   case $opt in
     h) HOSTS="$OPTARG"
     ;;

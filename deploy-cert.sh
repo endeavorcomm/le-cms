@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
+DOMAIN=''
+HOSTS=''
 
-while getopts ":d:h:" opt; do
+while getopts ":d:h:s" opt; do
   case $opt in
     d) DOMAIN="$OPTARG"
     ;;
@@ -41,13 +43,13 @@ then
 elif [[ $CHALLENGE == dns ]]
 then
   printf "Validate DNS acme-server\n"
-  read -p "Please enter the FQDN for the acme-dns server, then press enter: " SERVER
+  read -p "Please enter the FQDN for the acme-dns server, then press enter: " DNS
 
-  ## Format SERVER in all lowercase
-  SERVER=$(printf $SERVER | tr "{A-Z}" "{a-z}")
+  ## Format DNS in all lowercase
+  DNS=$(printf $DNS | tr "{A-Z}" "{a-z}")
 
   printf "\n"
-  read -n1 -rsp "Is this correct? $SERVER [Y|N] " CONFIRMSVR
+  read -n1 -rsp "Is this correct? $DNS [Y|N] " CONFIRMSVR
 
   ## Format response in all uppercase
   CONFIRMSVR=$(printf $CONFIRMSVR | tr "{y}" "{Y}")
@@ -55,7 +57,7 @@ then
   if [[ $CONFIRMSVR == Y ]]
   then
     printf "\nChecking health of acme-dns server...\n"
-    curl -sSI --stderr le-cms_acmestatus -X GET https://$SERVER/health > le-cms_acmestatus
+    curl -sSI --stderr le-cms_acmestatus -X GET https://$DNS/health > le-cms_acmestatus
 
     awk 'BEGIN {
         RS="\n"
@@ -99,11 +101,11 @@ fi
 
 printf "\nDeploying certificate...\n"
 for host in "${hosts[@]}"; do
-  rsync -rpLgo $BASE_DIR certbot@$host:/etc/ssl/le/
+  rsync -e 'ssh -i /home/certbot/.ssh/id_rsa' -rpLgo $BASE_DIR certbot@$host:/etc/ssl/le/
 done
 
 printf "\nAdding renew hook to certificate configuration...\n"
-sed -i "/\[renewalparams\]/a renew_hook = /home/certbot/renew-cert.sh -h $HOSTS" /etc/letsencrypt/renewal/$DOMAIN.conf
+sed -i "/\[renewalparams\]/a renew_hook = \"/home/certbot/renew-cert.sh -h '$HOSTS'\"" /etc/letsencrypt/renewal/$DOMAIN.conf
 
 printf "\nFinished.\n"
 exit 0

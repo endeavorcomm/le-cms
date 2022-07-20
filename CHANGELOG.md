@@ -7,14 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- logic which no longer requires you to enter the certbot user's password for every host that you're deploying a TLS certificate to. Instead, it uses the ssh key that is already used for other purposes in this system.
+
 ### Changed
 
 - webserver graceful restart, from systemctl-based to native commands for nginx and apache2 (apachectl)
-- host cli option - from comma separated to comma with a trailing space separated (ex: -h 10.0.0.1, 10.0.0.2)
+- host cli option - from comma separated to comma with a trailing space separated, and multiple host IPs should be surrounded by single quotes (ex: -h '10.0.0.1, 10.0.0.2')
+- clarifies steps in deploy-certificates.md, to reflect changes in script behavior
+- clarifies stesp in README.md, to reflect changes to behavior
 
-### Fixed
+### Removed
 
-- FAILED status, when verifying https sites for a proper response and there is a 301 before a 200
+- http and https verifications in deploy-site.sh. These are nice, but if you have multiple webservers for this URL and certificate then the verification gives a false impression for the additional hosts. These checks are only going to test the webserver host which has the IP address from the DNS lookup. You can still use the verify-http.sh script to check, but opening the site in a browser is the best way to test the new site.
 
 ## [3.0.1] - 2021-08-19
 

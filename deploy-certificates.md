@@ -1,6 +1,6 @@
 # Deploying TLS Certificates
 
-Disclaimer: If using the HTTP method, restarting the webserver is involved in this process
+Disclaimer: If using the HTTP method, gracefully restarting the webserver is involved in this process
 
 Ensure that all DNS entries for your url are resolvable before deploying a new site and certificate
 
@@ -20,11 +20,11 @@ SSH to your certificate management server as user certbot
 
 Run the deploy-cert.sh script
 
--d is the domain name of the certificate
+-d is the domain name of the certificate, and is required.
 
--h is a comma-space separated list of ip addresses of the webserver host(s) to copy certificate files to.
+-h is a comma-space separated list of ip addresses of the webserver host(s) to copy certificate files to, and is required. If using multiple hosts, the entire set with single quotes.
 
-    sudo ./deploy-cert.sh -d portal.example.com -h 10.1.1.1, 10.1.1.2
+    sudo ./deploy-cert.sh -d portal.example.com -h '10.1.1.1, 10.1.1.2'
 
 Follow the prompts
 
@@ -32,7 +32,6 @@ You'll be prompted to enter certbot's password once
 
 (When first deploying to these hosts, the next two steps will be repeated based on the number of hosts you provided in the deploy-site command)
 Accept the server's fingerprint by responding 'yes'
-You'll be prompted to enter certbot's password again
 
 ## If using the HTTP challenge method
 
