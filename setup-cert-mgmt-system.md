@@ -192,22 +192,25 @@ The acme-dns-auth.py script uses python. If you have python3 installed, add a sy
 - change the 'ACMEDNS_URL' to the FQDN of your acme-challenge server
 - add your acme-challenge server's network IP to the 'ALLOW_FROM' array (ex "192.168.1.1/32")
 
-### Deploy le-cms scripts
+### Deploy le-cms files to certbot home directory
 
-#### If using HTTP challenges, login to your webserver(s) as a user with sudo privileges
+#### Login to your webserver(s) as a user with sudo privileges
 
 Download scripts, or clone the repo from [GitHub](https://github.com/endeavorcomm/le-cms), and copy to the user's home directory
 
     sudo apt install git
     git clone https://github.com/endeavorcomm/le-cms.git
 
-If you cloned the repo, copy deploy-site.sh to your user's home directory
+If you cloned the repo, copy deploy-site.sh and le-cms.config to your user's home directory
 
     cp le-cms/deploy-site.sh ~
+    cp le-cms/le-cms.config ~
 
 Make sure the script is executable
 
     chmod 700 deploy-site.sh
+
+Edit the config file and fill in the fields with the proper information for this webserver.
 
 #### Login to your certificate management server as the certbot user
 
