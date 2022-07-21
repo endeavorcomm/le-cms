@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- support for configuration files when deploying new sites and certificates.
 - logic which no longer requires you to enter the certbot user's password for every host that you're deploying a TLS certificate to. Instead, it uses the ssh key that is already used for other purposes in this system.
 
 ### Changed
