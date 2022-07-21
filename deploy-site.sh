@@ -1,15 +1,27 @@
 #!/usr/bin/env bash
 
 ## Check for configuration file
-if [ -f "./le-cms.config" ]
+if [ -f "./le-cms-site.config" ]
 then
-. ./le-cms.config
+. ./le-cms-site.config
 else
-  printf "No le-cms.config configuration file found in current directory. Exiting..."
+  printf "No le-cms-site.config configuration file found in current directory. Exiting..."
   exit 1
 fi
 
 CERTPATH="/etc/ssl/le/"
+
+if [[ $WEBSERVER == '']]
+then
+  printf "WEBSERVER value is empty in config file. Exiting..."
+  exit 1
+fi
+
+if [[ $CMS == '']]
+then
+  printf "CMS value is empty in config file. Exiting..."
+  exit 1
+fi
 
 ## Format WEBSERVER in all lowercase
 WEBSERVER=$(printf $WEBSERVER | tr "{A-Z}" "{a-z}")
