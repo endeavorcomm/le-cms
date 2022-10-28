@@ -60,6 +60,10 @@ CONFIRMDOM=$(printf $CONFIRMDOM | tr "{y}" "{Y}")
 if [[ $CONFIRMDOM == Y ]]
 then
   printf "\nChecking for existing $DOMAIN sites...\n"
+else
+  printf "\nDomain not correct. Exiting..."
+  exit 1
+fi
 if [[ -f $CONFIGPATH$DOMAIN$DEFAULT && -f $CONFIGPATH$DOMAIN$SECURE ]]
 then
   printf "$CONFIGPATH$DOMAIN$DEFAULT and $CONFIGPATH$DOMAIN$SECURE already exist. \nExiting...\n"
