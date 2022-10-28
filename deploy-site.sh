@@ -11,13 +11,13 @@ fi
 
 CERTPATH="/etc/ssl/le/"
 
-if [[ $WEBSERVER == '']]
+if [[ $WEBSERVER == '' ]]
 then
   printf "WEBSERVER value is empty in config file. Exiting..."
   exit 1
 fi
 
-if [[ $CMS == '']]
+if [[ $CMS == '' ]]
 then
   printf "CMS value is empty in config file. Exiting..."
   exit 1
