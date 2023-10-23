@@ -26,6 +26,16 @@ Run the deploy-cert.sh script
 
     sudo ./deploy-cert.sh -d portal.example.com -h '10.1.1.1, 10.1.1.2'
 
+-g is a string which represents the hostgroup you want to use for this certificate. Hostgroups represent a set of IPs which the certificate will be copied to. e.g. `-g core` would require a filename called `le-cms-hostgroup-core`. The file should be in the same directory you're running the script from, and should be a list of IPs separated by a newline.
+
+e.g. file `le-cms-hostgroup-core`
+```
+10.1.1.1
+10.1.1.2
+```
+
+    sudo ./deploy-cert.sh -d portal.example.com -g core
+
 Follow the prompts
 
 You'll be prompted to enter certbot's password once

@@ -1,24 +1,43 @@
 #!/usr/bin/env bash
 DOMAIN=''
 HOSTS=''
+HOSTGROUP=''
+hosts_declared=false
+hostgroup_declared=false
 
 ## Check for configuration file
-if [ -f "./le-cms-cert.config" ]
+if [[ -f "./le-cms-cert.config" ]]
 then
 . ./le-cms-cert.config
 else
-  printf "No le-cms-cert.config configuration file found in current directory. Exiting..."
+  printf "No le-cms-cert.config configuration file found in current directory. Exiting.\n"
   exit 1
 fi
 
-while getopts ":d:h:s" opt; do
+while getopts ":d:h:g:s" opt; do
   case $opt in
-    d) DOMAIN="$OPTARG"
-    ;;
-    h) HOSTS="$OPTARG"
-    ;;
-    \?) printf "Invalid option -$OPTARG" && exit 1
-    ;;
+    d)
+      DOMAIN="$OPTARG"
+      ;;
+    h)
+      HOSTS="$OPTARG"
+      hosts_declared=true
+      ;;
+    g)
+      if [[ "$hosts_declared" == true ]]
+      then
+        printf "Error: -h and -g cannot be used together.\n" && exit 1
+      else
+        HOSTGROUP="$OPTARG"
+        hostgroup_declared=true
+      fi
+      ;;
+    \?)
+      printf "Invalid option -$OPTARG" && exit 1
+      ;;
+    :)
+      printf "Argument required but missing for option -$OPTARG\n" && exit 1
+      ;;
   esac
 done
 
@@ -29,14 +48,28 @@ then
   exit 1
 fi
 
-# check for host argument
-if [[ $HOSTS == '' ]]
+# check for host or hostgroup argument
+if [[ $HOSTS == '' && $HOSTGROUP == '' ]]
 then
-  printf "Please include at least one host IP address with -h\n"
+  printf "Please include either -h or -g with an appropriate argument.\n"
   exit 1
 fi
 
-IFS=", " read -ra hosts <<< $HOSTS
+# determine if using hosts or hostgroup and assign to 'hosts'
+if [[ $HOSTS != '' ]]
+then
+  IFS=", " read -ra hosts <<< $HOSTS
+elif [[ $HOSTGROUP != '' && -f "./le-cms-hostgroup-$HOSTGROUP" ]]
+then
+  hosts=()
+  while IFS= read -r line
+  do
+    hosts+=("$line")
+  done < "le-cms-hostgroup-$HOSTGROUP"
+else
+  printf "No hosts found.\n"
+  exit 1
+fi
 
 BASE_DIR=/etc/letsencrypt/live/$DOMAIN
 
@@ -108,7 +141,7 @@ then
   printf "Requesting Lets Encrypt certificate for $DOMAIN with DNS challenge...\n"
   sudo certbot certonly --manual --manual-auth-hook /etc/letsencrypt/acme-dns-auth.py --preferred-challenges dns --debug-challenges -d $DOMAIN
 else
-  printf "Invalid challenge option - $CHALLENGE"
+  printf "Invalid challenge option - $CHALLENGE\n"
   exit 1
 fi
 
@@ -118,7 +151,13 @@ for host in "${hosts[@]}"; do
 done
 
 printf "\nAdding renew hook to certificate configuration...\n"
-sed -i "/\[renewalparams\]/a renew_hook = \"/home/certbot/renew-cert.sh -h '$HOSTS'\"" /etc/letsencrypt/renewal/$DOMAIN.conf
+if [[ $hosts_declared == true ]]
+then
+  sed -i "/\[renewalparams\]/a renew_hook = \"/home/certbot/renew-cert.sh -h '$HOSTS'\"" /etc/letsencrypt/renewal/$DOMAIN.conf
+elif [[ $hostgroup_declared == true ]]
+then
+  sed -i "/\[renewalparams\]/a renew_hook = \"/home/certbot/renew-cert.sh -g '$HOSTGROUP'\"" /etc/letsencrypt/renewal/$DOMAIN.conf
+fi
 
 printf "\nFinished.\n"
 exit 0
