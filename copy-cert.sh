@@ -56,7 +56,7 @@ then
     hosts+=("$line")
   done < "le-cms-hostgroup-$HOSTGROUP"
 else
-  printf "No hosts found.\n"
+  printf "No hosts or group found. If using a hostgroup, ensure the file exists.\n"
   exit 1
 fi
 
