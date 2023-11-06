@@ -7,21 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Nothing to see here!
+
+## [4.0.0] - 2023-11-06
+
 ### Added
 
-- support for configuration files when deploying new sites and certificates.
-- logic which no longer requires you to enter the certbot user's password for every host that you're deploying a TLS certificate to. Instead, it uses the ssh key that is already used for other purposes in this system.
+- Support for hostgroups. Instead of using multiple hosts for deployment or renewal, you can define multiple hosts in a file and use the `-g` argument instead of `-h`. See [here](./deploy-certificates.md) for details.
+- Support for configuration files when deploying new sites and certificates.
+- Logic which no longer requires you to enter the certbot user's password for every host that you're deploying a TLS certificate to. Instead, it uses the ssh key that is already used for other purposes in this system.
 
 ### Changed
 
-- webserver graceful restart, from systemctl-based to native commands for nginx and apache2 (apachectl)
-- host cli option - from comma separated to comma with a trailing space separated, and multiple host IPs should be surrounded by single quotes (ex: -h '10.0.0.1, 10.0.0.2')
-- clarifies steps in deploy-certificates.md, to reflect changes in script behavior
-- clarifies stesp in README.md, to reflect changes to behavior
+- Webserver graceful restart, from systemctl-based to native commands for nginx and apache2 (apachectl).
+- Host cli option - from comma separated to comma with a trailing space separated, and multiple host IPs should be surrounded by single quotes (ex: -h '10.0.0.1, 10.0.0.2').
 
 ### Removed
 
-- http and https verifications in deploy-site.sh. These are nice, but if you have multiple webservers for this URL and certificate then the verification gives a false impression for the additional hosts. These checks are only going to test the webserver host which has the IP address from the DNS lookup. You can still use the verify-http.sh script to check, but opening the site in a browser is the best way to test the new site.
+- HTTP and HTTPS verifications in deploy-site.sh. These are nice, but if you have multiple webservers for this URL and certificate then the verification gives a false impression for the additional hosts. These checks are only going to test the webserver host which has the IP address from the DNS lookup. You can still use the verify-http.sh script to check, but opening the site in a browser is the best way to test the new site.
 
 ## [3.0.1] - 2021-08-19
 
@@ -106,7 +109,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Everything!
 
-[Unreleased]: https://github.com/endeavorcomm/le-cms/compare/v3.0.0...HEAD
+[Unreleased]: https://github.com/endeavorcomm/le-cms/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/endeavorcomm/le-cms/compare/v4.0.0...v3.0.1
 [3.0.1]: https://github.com/endeavorcomm/le-cms/compare/v3.0.1...v3.0.0
 [3.0.0]: https://github.com/endeavorcomm/le-cms/compare/v3.0.0...v2.1.3
 [2.1.3]: https://github.com/endeavorcomm/le-cms/compare/v2.1.2...v2.1.3
