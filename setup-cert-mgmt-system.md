@@ -253,4 +253,4 @@ An optional `cert.config` file can be copied to the configuration directory. If 
 
 If you're having trouble running the scripts, try copying the contents from the repo file, then pasting into the file on the server.
 
-The system should now be ready to deploy certificates! Find next steps in deploy-certificates.md in the repo.
+The system should now be ready to deploy websites and certificates! Find next steps in deploy-certificates.md in the repo.
