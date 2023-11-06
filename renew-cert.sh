@@ -39,13 +39,13 @@ fi
 if [[ $HOSTS != '' ]]
 then
   IFS=", " read -ra hosts <<< $HOSTS
-elif [[ $HOSTGROUP != '' && -f "./le-cms-hostgroup-$HOSTGROUP" ]]
+elif [[ $HOSTGROUP != '' && -f "/etc/le-cms/hostgroup-$HOSTGROUP" ]]
 then
   hosts=()
   while IFS= read -r line
   do
     hosts+=("$line")
-  done < "le-cms-hostgroup-$HOSTGROUP"
+  done < "/etc/le-cms/hostgroup-$HOSTGROUP"
 else
   printf "No hosts or group found. If using a hostgroup, ensure the file exists.\n"
   exit 1
