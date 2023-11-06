@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 HOSTS=''
 HOSTGROUP=''
+CONFIG_DIR=/etc/le-cms
 hosts_declared=false
 hostgroup_declared=false
 
@@ -39,13 +40,13 @@ fi
 if [[ $HOSTS != '' ]]
 then
   IFS=", " read -ra hosts <<< $HOSTS
-elif [[ $HOSTGROUP != '' && -f "/etc/le-cms/hostgroup-$HOSTGROUP" ]]
+elif [[ $HOSTGROUP != '' && -f "$CONFIG_DIR/hostgroup-$HOSTGROUP" ]]
 then
   hosts=()
   while IFS= read -r line
   do
     hosts+=("$line")
-  done < "/etc/le-cms/hostgroup-$HOSTGROUP"
+  done < "$CONFIG_DIR/hostgroup-$HOSTGROUP"
 else
   printf "No hosts or group found. If using a hostgroup, ensure the file exists.\n"
   exit 1

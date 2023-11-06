@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
+CONFIG_DIR=/etc/le-cms
 
 ## Check for configuration file
-if [ -f "./le-cms-site.config" ]
+if [ -f "$CONFIG_DIR/site.config" ]
 then
-. ./le-cms-site.config
+. $CONFIG_DIR/site.config
 else
-  printf "No le-cms-site.config configuration file found in current directory. Exiting..."
+  printf "No site.config file found in $CONFIG_DIR. Exiting..."
   exit 1
 fi
 

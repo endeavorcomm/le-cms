@@ -2,15 +2,16 @@
 DOMAIN=''
 HOSTS=''
 HOSTGROUP=''
+CONFIG_DIR=/etc/le-cms
 hosts_declared=false
 hostgroup_declared=false
 
 ## Check for configuration file
-if [[ -f "./le-cms-cert.config" ]]
+if [[ -f "$CONFIG_DIR/cert.config" ]]
 then
-. ./le-cms-cert.config
+. $CONFIG_DIR/cert.config
 else
-  printf "No le-cms-cert.config configuration file found in current directory. Exiting.\n"
+  printf "No cert.config file found in $CONFIG_DIR. Exiting.\n"
   exit 1
 fi
 
@@ -59,13 +60,13 @@ fi
 if [[ $HOSTS != '' ]]
 then
   IFS=", " read -ra hosts <<< $HOSTS
-elif [[ $HOSTGROUP != '' && -f "./le-cms-hostgroup-$HOSTGROUP" ]]
+elif [[ $HOSTGROUP != '' && -f "$CONFIG_DIR/hostgroup-$HOSTGROUP" ]]
 then
   hosts=()
   while IFS= read -r line
   do
     hosts+=("$line")
-  done < "le-cms-hostgroup-$HOSTGROUP"
+  done < "$CONFIG_DIR/hostgroup-$HOSTGROUP"
 else
   printf "No hosts found.\n"
   exit 1
