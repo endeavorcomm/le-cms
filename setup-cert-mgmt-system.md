@@ -2,17 +2,21 @@
 
 ## Setup servers that will use the certificates
 
-Login as a user with sudo privileges, then create the certbot user. You'll need to remember the password for steps further below
+Login as a user with sudo privileges, then create the certbot user. You'll need to remember the password for steps further below.
 
     sudo adduser certbot
 
-Add a firewall rule which allows ssh connections from your certificate managment server
+Create the config directory.
 
-We're assuming ufw is enabled and started. If you're not going to use a firewall, you can skip this step
+    sudo mkdir /etc/le-cms
+
+Add a firewall rule which allows ssh connections from your certificate managment server.
+
+We're assuming ufw is enabled and started. If you're not going to use a firewall, you can skip this step.
 
     sudo ufw allow from cert.server.ip.address to any port 22 proto tcp
 
-Add the directory where you'll store certificates
+Add the directory where you'll store certificates.
 
     cd /etc/ssl
     sudo mkdir le
@@ -21,7 +25,7 @@ Add the directory where you'll store certificates
 
 ### If you're using Apache2 for HTTP challenges
 
-Make sure relevant apache modules are enabled
+Make sure relevant apache modules are enabled.
 
     cd /etc/apache2/mods-enabled
 
@@ -31,12 +35,12 @@ Make sure relevant apache modules are enabled
     sudo ln -s ../mods-available/socache_shmcb.load socache_shmcb.load
     sudo ln -s ../mods-available/socache_dbm.load socache_dbm.load
 
-Create the options-ssl.conf file, if these don't already exist in your Apache configuration. Adjust SSLProtocols, SSLCipherSuites, and other options as desired
+Create the options-ssl.conf file, if these don't already exist in your Apache configuration. Adjust SSLProtocols, SSLCipherSuites, and other options as desired.
 
     cd ..
     sudo nano options-ssl.conf
 
-Copy the below content into the file
+Copy the below content into the file.
 
     SSLEngine on
     
@@ -45,41 +49,45 @@ Copy the below content into the file
     SSLCipherSuite          TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
     SSLHonorCipherOrder     off
 
-Save and close the file
+Save and close the file.
 
-Open the apache.conf file
+Open the apache.conf file.
 
     sudo nano apache.conf
 
-Copy this into the apache.conf file
+Copy this into the apache.conf file.
 
     SSLUseStapling On
     SSLStaplingCache "shmcb:logs/ssl_stapling(32768)"
 
-Save the file and close it
+Save the file and close it.
 
-Restart Apache
+Restart Apache.
 
     sudo systemctl reload apache2
 
 ## Setup the TLS certificate managment server
 
-Login as a user with sudo privileges, then create the certbot user. You may want to set the password the same as the certbot user you created on your web server(s)
+Login as a user with sudo privileges, then create the certbot user. You may want to set the password the same as the certbot user you created on your web server(s).
 
     sudo adduser certbot
 
-Install nginx
+Create the config directory.
+
+    sudo mkdir /etc/le-cms
+
+Install nginx.
 
     sudo apt install nginx
 
-Save and close the file
+Save and close the file.
 
 ### acme-challenge site for Lets Encrypt HTTP challenges
 
     cd /etc/nginx/sites-available
     sudo nano acme-challenge.example.com
 
-Copy the below content into the file
+Copy the below content into the file.
 
     server {
       listen 80;
@@ -93,28 +101,28 @@ Copy the below content into the file
       }
     }
 
-Save and close the file
+Save and close the file.
 
-Enable the site
+Enable the site.
 
     cd ../site-enabled
     sudo ln -s ../sites-available/acme-challenge.example.com acme-challenge.example.com
 
-Restart nginx
+Restart nginx.
 
     sudo systemctl restart nginx
 
-Logout of current session, and log back in as the certbot user
+Logout of current session, and log back in as the certbot user.
 
-create an ssh key pair, for remote access to your webserver(s)
+create an ssh key pair, for remote access to your webserver(s).
 
     ssh-keygen -t rsa
 
-copy the key to the remote webserver(s)
+Copy the key to the remote webserver(s).
 
     ssh-copy-id certbot@remote-ip-address
 
-You should get the below output. Answer the question with 'yes', and enter the webserver's certbot user password when prompted (from the 1st step of this doc)
+You should get the below output. Answer the question with 'yes', and enter the webserver's certbot user password when prompted (from the 1st step of this doc).
 
     /usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/certbot/.ssh/id_rsa.pub"
     The authenticity of host 'hostname (remote-ip-address)' can't be established.
@@ -130,13 +138,13 @@ You should get the below output. Answer the question with 'yes', and enter the w
     Now try logging into the machine, with:   "ssh 'certbot@remote-ip-address'"
     and check to make sure that only the key(s) you wanted were added.
 
-Then try connecting to the remote server
+Then try connecting to the remote server.
 
     ssh 'certbot@remote-ip-address'
 
-Enter the certbot user's password and you should be logged in (this may not be needed)
-Now type exit to close the session
-Then connect again, and you shouldn't be prompted for the password this time
+Enter the certbot user's password and you should be logged in (this may not be needed).
+Now type exit to close the session.
+Then connect again, and you shouldn't be prompted for the password this time.
 
 When doing ssh 'certbot@remote-ip-address' and you get something like:
 
@@ -146,7 +154,7 @@ When doing ssh 'certbot@remote-ip-address' and you get something like:
     Failed to add the host to the list of known hosts (/home/certbot/.ssh/known_hosts).
     Load key "/home/certbot/.ssh/id_rsa": Permission denied
 
-you can try this to resolve the issue:
+You can try this to resolve the issue:
 
     sudo -i
     cd /home/certbot
@@ -154,12 +162,12 @@ you can try this to resolve the issue:
     exit
     ssh 'certbot@remote-ip-address'
 
-logout of 'certbot' user session
+Logout of 'certbot' user session.
 
 ### To enable Lets Encrypt DNS challenges
 
 Install [acme-dns](https://github.com/joohoi/acme-dns) and follow the instructions
-(make sure the gcc package is installed on your server before trying to build acme-dns)
+(make sure the gcc package is installed on your server before trying to build acme-dns).
 
 Be sure to add DNS records to your main DNS server before starting acme-dns service!!
 
@@ -181,9 +189,9 @@ IN THE [api] section:
 - change 'ip' to the network IP address of your acme-challenge server
 - change 'tls' to "letsencrypt" (this allows acme-dns to properly bind to port 443)
 
-Install [acme-dns-client](https://github.com/joohoi/acme-dns-certbot-joohoi) and follow the instructions
+Install [acme-dns-client](https://github.com/joohoi/acme-dns-certbot-joohoi) and follow the instructions.
 
-The acme-dns-auth.py script uses python. If you have python3 installed, add a symbolic link
+The acme-dns-auth.py script uses python. If you have python3 installed, add a symbolic link.
 
     sudo ln -s /usr/bin/python3 /usr/bin/python
 
@@ -194,19 +202,19 @@ The acme-dns-auth.py script uses python. If you have python3 installed, add a sy
 
 ### Deploy le-cms files to certbot home directory
 
-#### Login to your webserver(s) as a user with sudo privileges
+#### Login to your webserver(s) as the certbot user
 
-Download scripts, or clone the repo from [GitHub](https://github.com/endeavorcomm/le-cms), and copy to the user's home directory
+Clone the repo from [GitHub](https://github.com/endeavorcomm/le-cms).
 
     sudo apt install git
     git clone https://github.com/endeavorcomm/le-cms.git
 
-If you cloned the repo, copy deploy-site.sh and le-cms.config to your user's home directory
+If you cloned the repo, copy deploy-site.sh to the certbot user's home directory, and le-cms.config to the config directory.
 
     cp le-cms/deploy-site.sh ~
-    cp le-cms/le-cms.config ~
+    cp le-cms/le-cms.config /etc/le-cms
 
-Make sure the script is executable
+Make sure the script is executable.
 
     chmod 700 deploy-site.sh
 
@@ -216,29 +224,29 @@ Edit the config file and fill in the fields with the proper information for this
 
 ## Setup cronjob to renew certificates
 
-Edit certbot's crontab
+Edit certbot's crontab.
 
     crontab -e
 
-Copy and paste the below line to the bottom of the existing cron list - adjust time as desired, default is everyday at 5:00am. Save and close the file
+Copy and paste the below line to the bottom of the existing cron list - adjust time as desired, default is everyday at 5:00am. Save and close the file.
 
     0 5 * * * sudo certbot -q renew
 
-Download scripts, or clone the repo from [GitHub](https://github.com/endeavorcomm/le-cms), and copy to the user's home directory
+Clone the repo from [GitHub](https://github.com/endeavorcomm/le-cms).
 
     sudo apt install git
     git clone https://github.com/endeavorcomm/le-cms.git
 
-If you cloned the repo, copy deploy-cert.sh and renew-cert.sh scripts into the home directory of the certbot user, on your certificate managment server
+Copy the `deploy-cert.sh` and `renew-cert.sh` scripts into the certbot user's home directory, on your certificate managment server.
 
     cp le-cms/deploy-cert.sh ~
     cp le-cms/renew-cert.sh ~
 
-Make sure the scripts are executable
+Make sure the scripts are executable.
 
     chmod 700 deploy-cert.sh
     chmod 700 renew-cert.sh
 
-If you're having trouble running the scripts, try copying the contents from the repo file, then pasting into the file on the server
+If you're having trouble running the scripts, try copying the contents from the repo file, then pasting into the file on the server.
 
-The system should now be ready to deploy certificates! Find next steps in deploy-certificates.md in the repo
+The system should now be ready to deploy certificates! Find next steps in deploy-certificates.md in the repo.
